@@ -1,13 +1,13 @@
-package com.mony.spring_app;
+package com.lomeu.mony;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringAppApplicationTests {
+class MonyApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

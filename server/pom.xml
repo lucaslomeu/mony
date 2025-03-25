@@ -8,10 +8,10 @@
 		<version>2.7.18</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.mony</groupId>
-	<artifactId>spring-app</artifactId>
+	<groupId>com.lomeu.mony</groupId>
+	<artifactId>Mony</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-app</name>
+	<name>Mony</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
