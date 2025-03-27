@@ -15,5 +15,5 @@ public class SubscriptionDTO {
     private String description;
     private double price;
     private LocalDate startDate;
-    private UserDTO user;
+    private Long userId;
 }
