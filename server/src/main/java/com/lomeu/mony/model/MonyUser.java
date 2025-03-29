@@ -1,22 +1,18 @@
 package com.lomeu.mony.model;
 
-import com.lomeu.mony.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User {
+public class MonyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

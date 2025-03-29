@@ -1,14 +1,14 @@
 package com.lomeu.mony.mapper;
 
-import com.lomeu.mony.dto.UserDTO;
-import com.lomeu.mony.model.User;
+import com.lomeu.mony.dto.MonyUserDTO;
+import com.lomeu.mony.model.MonyUser;
 
 public class UserMapper {
-    public static User toEntity(UserDTO userDTO) {
-        return new User(userDTO.getId(), userDTO.getName(), userDTO.getEmail(), userDTO.getPassword());
+    public static MonyUser toEntity(MonyUserDTO monyUserDTO) {
+        return new MonyUser(monyUserDTO.getId(), monyUserDTO.getName(), monyUserDTO.getEmail(), monyUserDTO.getPassword());
     }
 
-    public static UserDTO toDTO(User user) {
-        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword());
+    public static MonyUserDTO toDTO(MonyUser user) {
+        return new MonyUserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword());
     }
 }
