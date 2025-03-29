@@ -15,16 +15,17 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final MonyUserRepository monyUserRepository;
 
-    public void save(AddressDTO addressDTO) {
+    public AddressDTO save(AddressDTO addressDTO) {
        Address address = AddressMapper.toEntity(addressDTO);
        MonyUser user = monyUserRepository.findById(addressDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
        address.setUser(user);
        addressRepository.save(address);
+       return AddressMapper.toDTO(address);
     }
 
-    public AddressDTO findById(Long id) {
-        Address address = addressRepository.findById(id).orElseThrow(() -> new RuntimeException("Address not found"));
-        return AddressMapper.toDTO(address);
+    public AddressDTO findByUserId(Long id) {
+      Address address = addressRepository.findByUserId(id).orElseThrow(() -> new RuntimeException("Address not found"));
+      return AddressMapper.toDTO(address);
     }
 
     public void update(Long id, AddressDTO addressDTO) {

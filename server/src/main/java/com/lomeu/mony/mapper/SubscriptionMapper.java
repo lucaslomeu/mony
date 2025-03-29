@@ -3,6 +3,9 @@ package com.lomeu.mony.mapper;
 import com.lomeu.mony.dto.SubscriptionDTO;
 import com.lomeu.mony.model.Subscription;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class SubscriptionMapper {
     public static Subscription toEntity(SubscriptionDTO subscriptionDTO) {
         Subscription subscription = new Subscription();
@@ -22,5 +25,11 @@ public class SubscriptionMapper {
                 subscription.getPrice(),
                 subscription.getStartDate(),
                 subscription.getUser().getId());
+    }
+
+    public static List<SubscriptionDTO> toDTOList(List<Subscription> subscriptions) {
+        return subscriptions.stream()
+                .map(SubscriptionMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }
