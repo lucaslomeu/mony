@@ -29,5 +29,15 @@ services:
       - "8080:8080"
     restart: always
 
+  frontend:
+    build:
+      context: ./client
+    container_name: mony_frontend
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+    restart: always
+
 volumes:
   db_data: {}
