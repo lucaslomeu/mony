@@ -1,8 +1,38 @@
-<section>
-  <h1>Gerencie suas finanças com facilidade</h1>
-  <p>Tenha controle total sobre seus gastos e metas financeiras.</p>
-  <div>
-    <a [routerLink]="['/auth/login']">Entrar</a>
-    <a [routerLink]="['/auth/register']">Criar conta</a>
+<section class="min-h-[calc(100vh-80px)] py-12 px-4">
+  <div
+    class="max-w-screen-xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between gap-8"
+  >
+    <!-- Conteúdo principal -->
+    <div class="max-w-xl text-center md:text-left">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+        Gerencie suas <span class="text-blue-600">finanças</span> com facilidade
+      </h1>
+      <p class="text-gray-600 mb-8">
+        Controle seus gastos, acompanhe metas e alcance a liberdade financeira
+        com o <strong>Mony</strong>.
+      </p>
+
+      <div
+        class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
+      >
+        <a
+          routerLink="/auth/login"
+          class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
+        >
+          Entrar
+        </a>
+        <a
+          routerLink="/auth/register"
+          class="border border-blue-600 text-blue-600 px-6 py-3 rounded hover:bg-blue-50 transition"
+        >
+          Criar conta
+        </a>
+      </div>
+    </div>
+
+    <!-- Imagem ilustrativa -->
+    <div class="w-full md:w-1/2 flex justify-center">
+      <img src="assets/home.svg" alt="Ilustração" class="w-full max-w-md" />
+    </div>
   </div>
 </section>
