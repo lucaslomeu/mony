@@ -30,7 +30,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests(auth -> auth
-                        .antMatchers("/auth/**", "/api/v1/users", "/login").permitAll()
+                        .antMatchers("/auth/**", "/api/v1/users").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

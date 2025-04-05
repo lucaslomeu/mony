@@ -1,6 +1,7 @@
 package com.lomeu.mony.security;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,6 +22,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
+    private static final List<String> EXCLUDED_PATHS = List.of("/auth/login", "/auth/register", "/auth/refresh-token");
 
     public JwtFilter(JwtUtil jwtUtil, CustomUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
@@ -31,6 +33,14 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
+
+        boolean isExcludedPath = EXCLUDED_PATHS.stream()
+                .anyMatch(excludedPath -> request.getServletPath().startsWith(excludedPath));
+
+        if (isExcludedPath) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String header = request.getHeader("Authorization");
         String token = null;
