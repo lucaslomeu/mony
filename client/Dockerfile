@@ -1,4 +1,4 @@
-# STAGE 1: Build Angualr App
+# STAGE 1: Build Angular App
 FROM node:18.19.1 as build
 WORKDIR /app
 COPY package.json ./
