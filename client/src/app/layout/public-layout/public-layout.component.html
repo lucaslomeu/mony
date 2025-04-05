@@ -1,5 +1,9 @@
-<header>
-  <h1>Public Layout</h1>
-  <router-outlet></router-outlet>
-  <footer>2025 Mony</footer>
-</header>
+<div class="flex flex-col min-h-screen">
+  <app-header></app-header>
+
+  <main class="flex-grow">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-footer></app-footer>
+</div>
