@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class RegisterService {
-  private readonly API_URL = environment.apiUrl + '/api/v1/users';
+  private readonly API_URL = environment.apiUrl + '/users';
   protected http = inject(HttpClient);
   protected router = inject(Router);
 
