@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { Component, inject, input } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,15 +7,24 @@ import {
   Validators,
 } from '@angular/forms';
 import { RegisterService } from '../../../shared/register.service';
+import { CepService } from '../../../shared/cep.service';
+import { State } from '../../../shared/enums/state';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
   protected registerService = inject(RegisterService);
+  protected cepService = inject(CepService);
+
+  states = this.cepService.loadedStates;
+  cities = this.cepService.loadedCities;
+
+  stateSelected = input<string>('');
+  citySelected = input<string>('');
 
   registerForm: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -23,35 +33,42 @@ export class RegisterComponent {
     password: new FormControl('', [Validators.required]),
     confirmPassword: new FormControl('', [Validators.required]),
     address: new FormGroup({
+      state: new FormControl('', [Validators.required]),
+      city: new FormControl('', [Validators.required]),
       cep: new FormControl('', [Validators.required]),
       street: new FormControl('', [Validators.required]),
       number: new FormControl('', [Validators.required]),
       complement: new FormControl(''),
       neighborhood: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      state: new FormControl('', [Validators.required]),
     }),
   });
 
   register() {
     if (this.registerForm.invalid) {
+      Object.keys(this.registerForm.controls).forEach((key) => {
+        const controlErrors = this.registerForm.get(key)?.errors;
+        if (controlErrors) {
+          console.error(`Error in ${key}:`, controlErrors);
+        }
+      });
       this.registerForm.markAllAsTouched();
       console.error('Form is invalid');
       return;
     }
+
+    const selectedStateValue = this.registerForm.get('address.state')?.value;
+    const stateKey = Object.keys(State).find(
+      (key) => State[key as keyof typeof State] === selectedStateValue
+    );
 
     const userData = {
       name: this.registerForm.get('name')?.value,
       email: this.registerForm.get('email')?.value,
       password: this.registerForm.get('password')?.value,
       address: {
-        cep: this.registerForm.get('address.cep')?.value,
-        street: this.registerForm.get('address.street')?.value,
-        number: this.registerForm.get('address.number')?.value,
-        complement: this.registerForm.get('address.complement')?.value,
-        neighborhood: this.registerForm.get('address.neighborhood')?.value,
-        city: this.registerForm.get('address.city')?.value,
-        state: this.registerForm.get('address.state')?.value,
+        ...this.registerForm.get('address')?.value,
+        state: stateKey, // Use the state key instead of the value
+        cep: this.registerForm.get('address.cep')?.value.replace('-', ''), // Remove hyphen
       },
     };
 
@@ -65,5 +82,10 @@ export class RegisterComponent {
         console.error('Registration failed', err);
       },
     });
+  }
+
+  onStateChange() {
+    const selectedState = this.registerForm.get('address.state')?.value;
+    this.cepService.setState(selectedState);
   }
 }

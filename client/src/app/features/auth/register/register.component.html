@@ -7,16 +7,21 @@
     </h2>
 
     <form [formGroup]="registerForm" (ngSubmit)="register()" class="space-y-8">
-      <div>
+      <div class="grid grid-cols-1 gap-4">
         <input formControlName="name" class="input-clean" placeholder="Nome" />
         <input
           formControlName="email"
           class="input-clean"
           placeholder="Email"
         />
+        <input
+          formControlName="confirmEmail"
+          class="input-clean"
+          placeholder="Confirmar Email"
+        />
       </div>
 
-      <div>
+      <div class="grid grid-cols-1 gap-4">
         <input
           formControlName="password"
           class="input-clean"
@@ -59,16 +64,27 @@
           />
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <input
-              formControlName="city"
-              placeholder="Cidade"
-              class="input-clean"
-            />
-            <input
+            <select
               formControlName="state"
-              placeholder="Estado"
               class="input-clean"
-            />
+              (change)="onStateChange()"
+            >
+              <option value="" disabled selected>Selecione o estado</option>
+              @for (state of states(); track state.id) {
+              <option [value]="state.id">
+                {{ state.sigla }}
+              </option>
+              }
+            </select>
+
+            <select formControlName="city" class="input-clean">
+              <option value="" disabled selected>Selecione a cidade</option>
+              @for (city of cities(); track city.id) {
+              <option [value]="city">
+                {{ city.nome }}
+              </option>
+              }
+            </select>
           </div>
         </div>
       </div>

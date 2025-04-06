@@ -22,8 +22,8 @@
 
   <nav
     [ngClass]="{
-      hidden: !menuOpen,
-      flex: menuOpen
+      hidden: !menuOpen(),
+      flex: menuOpen()
     }"
     class="flex-col md:flex md:flex-row md:items-center md:gap-6 absolute top-full left-0 w-full bg-white md:static md:w-auto md:bg-transparent z-10 px-4 md:px-0"
   >

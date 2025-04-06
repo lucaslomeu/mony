@@ -12,7 +12,12 @@ export class RegisterService {
   protected http = inject(HttpClient);
   protected router = inject(Router);
 
-  register(userData: { email: string; password: string }): Observable<any> {
-    return this.http.post(this.API_URL, userData);
+  register(userData: {
+    name: string;
+    email: string;
+    password: string;
+    address: any;
+  }): Observable<any> {
+    return this.http.post(`${this.API_URL}/register`, userData);
   }
 }
