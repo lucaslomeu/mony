@@ -16,4 +16,6 @@ public class MonyUserDTO {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
+    private AddressDTO address;
 }

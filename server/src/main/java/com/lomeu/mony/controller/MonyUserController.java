@@ -13,7 +13,7 @@ public class MonyUserController {
 
     private final MonyUserService monyUserService;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<MonyUserDTO> save(@RequestBody MonyUserDTO userDTO) {
         MonyUserDTO savedUser = monyUserService.save(userDTO);
         return ResponseEntity.ok(savedUser);
