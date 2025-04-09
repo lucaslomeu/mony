@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../../shared/auth.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +16,7 @@ import { RouterLink } from '@angular/router';
 })
 export class LoginComponent {
   protected authService = inject(AuthService);
+  protected router = inject(Router);
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -33,8 +34,8 @@ export class LoginComponent {
 
     this.authService.login({ email, password }).subscribe({
       next: (response) => {
-        console.log('response', response);
-        this.authService.setToken('tokenValue');
+        this.authService.setUser(response);
+        this.router.navigate(['/dashboard']);
         return response;
       },
       error: (err) => {

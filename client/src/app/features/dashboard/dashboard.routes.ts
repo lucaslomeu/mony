@@ -4,3 +4,17 @@ import { DashboardHomeComponent } from './dashboard-home/dashboard-home.componen
 export const DASHBOARD_ROUTES: Routes = [
   { path: '', component: DashboardHomeComponent },
 ];
+
+// export const DASHBOARD_ROUTES: Routes = [
+//   {
+//     path: '',
+//     component: DashboardHomeComponent,
+//   },
+//   {
+//     path: 'assinaturas',
+//     loadComponent: () =>
+//       import('./assinaturas/assinaturas.component').then(
+//         (m) => m.AssinaturasComponent
+//       ),
+//   },
+// ];

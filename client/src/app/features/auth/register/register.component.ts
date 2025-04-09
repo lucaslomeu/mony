@@ -17,8 +17,8 @@ import { State } from '../../../shared/enums/state';
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
-  protected registerService = inject(RegisterService);
-  protected cepService = inject(CepService);
+  private registerService = inject(RegisterService);
+  private cepService = inject(CepService);
 
   states = this.cepService.loadedStates;
   cities = this.cepService.loadedCities;

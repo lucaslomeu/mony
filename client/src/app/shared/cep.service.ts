@@ -15,7 +15,6 @@ export class CepService {
   protected http = inject(HttpClient);
 
   stateSelected = signal<string>('');
-  citySelected = signal<string>('');
 
   states = resource({
     request: () => null,

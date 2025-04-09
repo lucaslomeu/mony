@@ -9,3 +9,8 @@
          focus:outline-none focus:ring-2 focus:ring-blue-500
          focus:border-transparent transition bg-white placeholder:text-gray-400;
 }
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
