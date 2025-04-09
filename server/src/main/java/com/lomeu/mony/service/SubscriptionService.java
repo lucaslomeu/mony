@@ -19,14 +19,13 @@ public class SubscriptionService {
 
     public SubscriptionDTO save(SubscriptionDTO subscriptionDTO) {
         Subscription subscription = SubscriptionMapper.toEntity(subscriptionDTO);
-        MonyUser user = monyUserRepository.findById(subscriptionDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        subscription.setUser(user);
         subscriptionRepository.save(subscription);
         return SubscriptionMapper.toDTO(subscription);
     }
 
     public SubscriptionDTO findById(Long id) {
-        Subscription subscription = subscriptionRepository.findById(id).orElseThrow(() -> new RuntimeException("Subscription not found"));
+        Subscription subscription = subscriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subscription not found"));
         return SubscriptionMapper.toDTO(subscription);
     }
 
@@ -36,16 +35,19 @@ public class SubscriptionService {
     }
 
     public void update(Long id, SubscriptionDTO subscriptionDTO) {
-        Subscription subscription = subscriptionRepository.findById(id).orElseThrow(() -> new RuntimeException("Subscription not found"));
+        Subscription subscription = subscriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subscription not found"));
         Subscription updated = SubscriptionMapper.toEntity(subscriptionDTO);
         updated.setId(subscription.getId());
-        MonyUser user = monyUserRepository.findById(subscriptionDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+        MonyUser user = monyUserRepository.findById(subscriptionDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
         updated.setUser(user);
         subscriptionRepository.save(subscription);
     }
 
     public void delete(Long id) {
-        Subscription subscription = subscriptionRepository.findById(id).orElseThrow(() -> new RuntimeException("Subscription not found"));
+        Subscription subscription = subscriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subscription not found"));
         subscriptionRepository.delete(subscription);
     }
 

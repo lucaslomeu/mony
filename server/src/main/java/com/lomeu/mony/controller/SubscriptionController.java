@@ -1,11 +1,14 @@
 package com.lomeu.mony.controller;
 
 import com.lomeu.mony.dto.SubscriptionDTO;
+import com.lomeu.mony.model.MonyUser;
+import com.lomeu.mony.repository.MonyUserRepository;
 import com.lomeu.mony.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -14,10 +17,22 @@ import java.util.List;
 public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
+    private final MonyUserRepository monyUserRepository;
 
     @PostMapping
-    public ResponseEntity<SubscriptionDTO> save(@RequestBody SubscriptionDTO subscriptionDTO) {
-        SubscriptionDTO subscription =  subscriptionService.save(subscriptionDTO);
+    public ResponseEntity<SubscriptionDTO> save(@RequestBody SubscriptionDTO subscriptionDTO, Principal principal) {
+        System.out.println("Principal: " + principal.getName());
+
+        MonyUser user = monyUserRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        System.out.println("User: " + user);
+
+        subscriptionDTO.setUserId(user.getId());
+
+        System.out.println("SubscriptionDTO: " + subscriptionDTO);
+
+        SubscriptionDTO subscription = subscriptionService.save(subscriptionDTO);
         return ResponseEntity.ok(subscription);
     }
 

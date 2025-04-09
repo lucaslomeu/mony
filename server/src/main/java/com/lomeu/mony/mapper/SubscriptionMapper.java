@@ -1,6 +1,7 @@
 package com.lomeu.mony.mapper;
 
 import com.lomeu.mony.dto.SubscriptionDTO;
+import com.lomeu.mony.model.MonyUser;
 import com.lomeu.mony.model.Subscription;
 
 import java.util.List;
@@ -14,6 +15,13 @@ public class SubscriptionMapper {
         subscription.setDescription(subscriptionDTO.getDescription());
         subscription.setPrice(subscriptionDTO.getPrice());
         subscription.setStartDate(subscriptionDTO.getStartDate());
+
+        if (subscriptionDTO.getUserId() != null) {
+            MonyUser user = new MonyUser();
+            user.setId(subscriptionDTO.getUserId());
+            subscription.setUser(user);
+        }
+
         return subscription;
     }
 
