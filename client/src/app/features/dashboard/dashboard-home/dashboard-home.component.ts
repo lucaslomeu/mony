@@ -1,14 +1,5 @@
-import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  inject,
-  input,
-  OnInit,
-  resource,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, resource } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -17,7 +8,6 @@ import {
 } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { SubscriptionService } from '../../../shared/subscription.service';
-import { AuthService } from '../../../shared/auth.service';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -28,25 +18,18 @@ import { AuthService } from '../../../shared/auth.service';
 })
 export class DashboardHomeComponent {
   private subscriptionService = inject(SubscriptionService);
-  private authService = inject(AuthService);
 
-  subs = input<any>([]);
-
-  subscriptionResouce = resource({
+  subscriptionResource = resource({
     request: () => null,
     loader: async () => {
-      const currentUser = this.authService.currentUser;
-      const response = await firstValueFrom(
-        this.subscriptionService.getSubscriptions(currentUser.id)
-      );
+      const response = await this.subscriptionService.getSubscriptions();
 
-      console.warn('subscriptions', response);
       return response;
     },
   });
 
   subscriptions = computed(() => {
-    const statesValue = this.subscriptionResouce.value();
+    const statesValue = this.subscriptionResource.value();
 
     if (Array.isArray(statesValue)) {
       return statesValue.map(({ id, name, price }) => ({
@@ -97,8 +80,11 @@ export class DashboardHomeComponent {
 
     this.subscriptionService.createSubscription(newSubscription).subscribe({
       next: (response) => {
-        console.log('Subscription created successfully:', response);
         this.subscriptionForm.reset();
+
+        this.subscriptionResource.update(() => {
+          return [...this.subscriptions(), response];
+        });
       },
       error: (error) => {
         console.error('Error creating subscription:', error);

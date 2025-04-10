@@ -1,36 +1,12 @@
 <div class="flex h-screen bg-gray-100">
-  <!-- Sidebar -->
-  <aside class="w-64 bg-white shadow-md p-4">
-    <div class="text-xl font-bold mb-6">Finanças</div>
-    <nav class="space-y-2">
-      <a
-        routerLink="/dashboard"
-        class="block text-gray-700 hover:text-blue-600 transition"
-        >Dashboard</a
-      >
-      <a
-        routerLink="/dashboard/assinaturas"
-        class="block text-gray-700 hover:text-blue-600 transition"
-        >Assinaturas</a
-      >
-      <a
-        routerLink="/account/profile"
-        class="block text-gray-700 hover:text-blue-600 transition"
-        >Conta</a
-      >
-    </nav>
-  </aside>
+  <app-sidebar
+    class="hidden md:block fixed top-0 left-0 h-full w-64 bg-gray-800 text-white shadow-md p-6"
+  ></app-sidebar>
 
-  <!-- Content -->
   <div class="flex-1 flex flex-col">
-    <!-- Header -->
-    <header class="bg-white shadow p-4 flex justify-between items-center">
-      <span class="text-sm text-gray-600">Olá, Usuário</span>
-      <button class="text-sm text-red-500 hover:underline">Sair</button>
-    </header>
+    <app-header (toggleMenu)="toggleMenu()"></app-header>
 
-    <!-- Main content -->
-    <main class="flex-1 overflow-y-auto p-6">
+    <main class="flex-1 overflow-y-auto p-6 md:ml-64 mt-12">
       <router-outlet></router-outlet>
     </main>
   </div>

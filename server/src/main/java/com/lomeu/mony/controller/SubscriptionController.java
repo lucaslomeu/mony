@@ -21,16 +21,10 @@ public class SubscriptionController {
 
     @PostMapping
     public ResponseEntity<SubscriptionDTO> save(@RequestBody SubscriptionDTO subscriptionDTO, Principal principal) {
-        System.out.println("Principal: " + principal.getName());
-
         MonyUser user = monyUserRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        System.out.println("User: " + user);
-
         subscriptionDTO.setUserId(user.getId());
-
-        System.out.println("SubscriptionDTO: " + subscriptionDTO);
 
         SubscriptionDTO subscription = subscriptionService.save(subscriptionDTO);
         return ResponseEntity.ok(subscription);
@@ -48,9 +42,12 @@ public class SubscriptionController {
         return ResponseEntity.ok(subscription);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<SubscriptionDTO>> getSubscriptionsByUserId(@PathVariable Long userId) {
-        List<SubscriptionDTO> subscriptions = subscriptionService.findByUserId(userId);
+    @GetMapping("/user/subscriptions")
+    public ResponseEntity<List<SubscriptionDTO>> getSubscriptionsByUserId(Principal principal) {
+        MonyUser user = monyUserRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<SubscriptionDTO> subscriptions = subscriptionService.findByUserId(user.getId());
         return ResponseEntity.ok(subscriptions);
     }
 

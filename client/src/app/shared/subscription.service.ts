@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../enviroment';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +16,9 @@ export class SubscriptionService {
     return this.http.post(`${this.API_URL}`, subscriptionData);
   }
 
-  getSubscriptions(userId: number) {
-    return this.http.get(`${this.API_URL}/user/${userId}`);
+  getSubscriptions(): Promise<any> {
+    return firstValueFrom(
+      this.http.get<any>(`${this.API_URL}/user/subscriptions`)
+    );
   }
 }
