@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, resource } from '@angular/core';
+import { Component, computed, inject, input, resource } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { SubscriptionService } from '../../../shared/subscription.service';
+import { ChartData } from 'chart.js';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -32,11 +33,17 @@ export class DashboardHomeComponent {
     const statesValue = this.subscriptionResource.value();
 
     if (Array.isArray(statesValue)) {
-      return statesValue.map(({ id, name, price }) => ({
+      const statesMap = statesValue.map(({ id, name, price, startDate }) => ({
         id,
         name,
         price,
+        startDate,
       }));
+
+      this.createCharts(statesMap);
+
+      console.warn('Updated subscriptions:', statesMap);
+      return statesMap;
     }
 
     return [];
@@ -44,14 +51,28 @@ export class DashboardHomeComponent {
 
   showModal = false;
 
-  lineChartData = {
-    labels: ['Jan', 'Fev', 'Mar', 'Abr'],
-    datasets: [{ label: 'Gastos Mensais', data: [300, 500, 250, 400] }],
+  lineChartData: ChartData = {
+    labels: [],
+    datasets: [
+      {
+        label: 'Gastos Mensais',
+        data: [],
+        fill: true,
+        borderColor: '#4bc0c0',
+        tension: 0.1,
+      },
+    ],
   };
 
-  pieChartData = {
-    labels: ['Streaming', 'Educação', 'Fitness'],
-    datasets: [{ data: [40, 30, 30] }],
+  pieChartData: ChartData = {
+    labels: [],
+    datasets: [
+      {
+        label: 'Categorias de Assinaturas',
+        data: [],
+        backgroundColor: ['#ff6384', '#36a2eb', '#ffce56'],
+      },
+    ],
   };
 
   subscriptionForm = new FormGroup({
@@ -60,6 +81,87 @@ export class DashboardHomeComponent {
     price: new FormControl('', [Validators.required, Validators.min(0.01)]),
     startDate: new FormControl('', Validators.required),
   });
+
+  totalSubscriptions = computed(() => {
+    const statesValue = this.subscriptionResource.value();
+
+    if (Array.isArray(statesValue)) {
+      return statesValue.length;
+    }
+
+    return 0;
+  });
+
+  totalPrice = computed(() => {
+    const statesValue = this.subscriptionResource.value();
+
+    if (Array.isArray(statesValue)) {
+      return statesValue.reduce((acc, curr) => acc + curr.price, 0);
+    }
+
+    return 0;
+  });
+
+  totalPriceFormatted = computed(() => {
+    const statesValue = this.subscriptionResource.value();
+
+    if (Array.isArray(statesValue)) {
+      const value = statesValue.reduce((acc, curr) => acc + curr.price, 0);
+
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(value);
+    }
+
+    return 0;
+  });
+
+  mediaPrice = computed(() => {
+    const statesValue = this.subscriptionResource.value();
+
+    if (Array.isArray(statesValue)) {
+      const value = statesValue.reduce((acc, curr) => acc + curr.price, 0);
+
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(value / statesValue.length);
+    }
+
+    return 0;
+  });
+
+  createCharts(statesMap: any[]) {
+    console.warn('statesMap', statesMap);
+
+    const data = statesMap.reduce((acc, curr) => {
+      const date = new Date(curr.startDate);
+      const month = date
+        .toLocaleString('pt-BR', { month: 'long' })
+        .replace(/^./, (char) => char.toUpperCase());
+
+      if (!acc[month]) {
+        acc[month] = 0;
+      }
+
+      acc[month] += curr.price;
+
+      return acc;
+    }, {});
+
+    this.lineChartData.labels = Object.keys(data);
+    this.lineChartData.datasets[0].data = Object.values(data);
+    this.lineChartData.datasets[0].backgroundColor = '#4bc0c0';
+
+    this.pieChartData.labels = Object.keys(data);
+    this.pieChartData.datasets[0].data = Object.values(data);
+    this.pieChartData.datasets[0].backgroundColor = [
+      '#ff6384',
+      '#36a2eb',
+      '#ffce56',
+    ];
+  }
 
   openModal() {
     this.showModal = true;

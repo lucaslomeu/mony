@@ -34,6 +34,7 @@ export class LoginComponent {
 
     this.authService.login({ email, password }).subscribe({
       next: (response) => {
+        this.router.navigate(['/dashboard']);
         console.warn('Login response', response);
       },
       error: (err) => {
