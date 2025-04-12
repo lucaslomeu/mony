@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../enviroment';
-import { tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 
 export interface AuthResponse {
   id: number;
@@ -18,19 +18,24 @@ export class AuthService {
   private readonly API_URL = environment.apiUrl + '/auth';
   protected http = inject(HttpClient);
   protected router = inject(Router);
+  private currentUserSubject = new BehaviorSubject<AuthResponse | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
 
   login(credentials: { email: string; password: string }) {
     return this.http
       .post<AuthResponse>(`${this.API_URL}/login`, credentials)
       .pipe(
         tap((response) => {
+          console.warn('Login response:', response);
           localStorage.setItem('authToken', response.token);
+          this.currentUserSubject.next(response);
         })
       );
   }
 
   logout(): void {
     localStorage.removeItem('authToken');
+    this.currentUserSubject.next(null);
     this.router.navigate(['/']);
   }
 
@@ -40,5 +45,9 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.getAuthToken();
+  }
+
+  getCurrentUser(): AuthResponse | null {
+    return this.currentUserSubject.value;
   }
 }

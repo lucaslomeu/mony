@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { AuthService } from '../../shared/auth.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -11,10 +12,16 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
   styleUrl: './main-layout.component.scss',
 })
 export class MainLayoutComponent {
-  isMenuOpen = false;
-  isMobile = false;
+  authService = inject(AuthService);
+  menuOpen = false;
 
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
+    console.warn('toggleMenu() called', this.menuOpen); // Log para depuração
+    this.menuOpen = !this.menuOpen;
+  }
+
+  logout() {
+    this.authService.logout();
+    this.menuOpen = false;
   }
 }

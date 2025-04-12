@@ -36,8 +36,8 @@ export const routes: Routes = [
       {
         path: 'account',
         loadChildren: () =>
-          import('./features/dashboard/dashboard.routes').then(
-            (m) => m.DASHBOARD_ROUTES
+          import('./features/account/account.routes').then(
+            (m) => m.ACCOUNT_ROUTES
           ),
       },
     ],

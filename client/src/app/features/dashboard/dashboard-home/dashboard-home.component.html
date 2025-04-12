@@ -1,3 +1,4 @@
+<!-- CARDS -->
 <section class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
   <!-- Card: Total de Subscriptions -->
   <div
@@ -45,30 +46,19 @@
   </div>
 </section>
 
+<!-- CHARTS -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-  <!-- Gráfico de linha -->
-  <div class="bg-white rounded-lg shadow-sm p-6">
-    <h3 class="text-sm font-medium text-gray-700 mb-4">Gastos Mensais</h3>
-    <canvas
-      baseChart
-      [data]="lineChartData"
-      chartType="line"
-      class="max-h-64"
-    ></canvas>
-  </div>
+  <app-chart
+    [title]="'Gastos Mensais'"
+    [chartType]="'bar'"
+    [data]="lineChartData"
+  ></app-chart>
 
-  <!-- Gráfico de pizza -->
-  <div class="bg-white rounded-lg shadow-sm p-6">
-    <h3 class="text-sm font-medium text-gray-700 mb-4">
-      Categorias de Assinaturas
-    </h3>
-    <canvas
-      baseChart
-      [data]="pieChartData"
-      chartType="pie"
-      class="max-h-64"
-    ></canvas>
-  </div>
+  <app-chart
+    [title]="'Categorias de Assinaturas'"
+    [chartType]="'pie'"
+    [data]="pieChartData"
+  ></app-chart>
 </div>
 
 <!-- Lista de assinaturas -->
@@ -149,6 +139,11 @@
       <input
         formControlName="description"
         placeholder="Descrição"
+        class="input-clean mb-3 w-full"
+      />
+      <input
+        formControlName="category"
+        placeholder="Categoria(s)"
         class="input-clean mb-3 w-full"
       />
       <input

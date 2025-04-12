@@ -10,6 +10,10 @@
          focus:border-transparent transition bg-white placeholder:text-gray-400;
 }
 
+.sidebar-link {
+  @apply flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-gray-200 transition ease-in-out duration-300;
+}
+
 canvas {
   width: 100% !important;
   height: auto !important;

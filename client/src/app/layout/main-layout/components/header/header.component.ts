@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { AuthService } from '../../../../shared/auth.service';
 
 @Component({
@@ -8,10 +8,10 @@ import { AuthService } from '../../../../shared/auth.service';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
+  @Output() toggleMenu = new EventEmitter<void>();
+
   authService = inject(AuthService);
-  toggleMenu() {
-    console.warn('open');
-  }
+  user = this.authService.getCurrentUser();
 
   logout() {
     this.authService.logout();

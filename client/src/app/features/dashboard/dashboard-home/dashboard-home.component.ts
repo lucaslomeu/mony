@@ -1,19 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, resource } from '@angular/core';
+import { Component, computed, inject, resource } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { BaseChartDirective } from 'ng2-charts';
 import { SubscriptionService } from '../../../shared/subscription.service';
 import { ChartData } from 'chart.js';
+import { ChartComponent } from '../components/chart/chart.component';
 
 @Component({
   selector: 'app-dashboard-home',
   standalone: true,
-  imports: [BaseChartDirective, CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ChartComponent],
   templateUrl: './dashboard-home.component.html',
   styleUrls: ['./dashboard-home.component.scss'],
 })
@@ -23,27 +23,17 @@ export class DashboardHomeComponent {
   subscriptionResource = resource({
     request: () => null,
     loader: async () => {
-      const response = await this.subscriptionService.getSubscriptions();
-
-      return response;
+      return await this.subscriptionService.getSubscriptions();
     },
   });
 
   subscriptions = computed(() => {
     const statesValue = this.subscriptionResource.value();
 
-    if (Array.isArray(statesValue)) {
-      const statesMap = statesValue.map(({ id, name, price, startDate }) => ({
-        id,
-        name,
-        price,
-        startDate,
-      }));
-
-      this.createCharts(statesMap);
-
-      console.warn('Updated subscriptions:', statesMap);
-      return statesMap;
+    if (statesValue) {
+      this.createCharts(statesValue);
+      console.warn('Updated subscriptions:', statesValue);
+      return statesValue;
     }
 
     return [];
@@ -55,7 +45,7 @@ export class DashboardHomeComponent {
     labels: [],
     datasets: [
       {
-        label: 'Gastos Mensais',
+        label: 'Gasto Mensal',
         data: [],
         fill: true,
         borderColor: '#4bc0c0',
@@ -80,76 +70,77 @@ export class DashboardHomeComponent {
     description: new FormControl('', Validators.required),
     price: new FormControl('', [Validators.required, Validators.min(0.01)]),
     startDate: new FormControl('', Validators.required),
+    category: new FormControl('', Validators.required),
   });
 
   totalSubscriptions = computed(() => {
-    const statesValue = this.subscriptionResource.value();
-
-    if (Array.isArray(statesValue)) {
-      return statesValue.length;
-    }
-
-    return 0;
+    return this.subscriptionResource.value()?.length || 0;
   });
 
   totalPrice = computed(() => {
     const statesValue = this.subscriptionResource.value();
 
-    if (Array.isArray(statesValue)) {
-      return statesValue.reduce((acc, curr) => acc + curr.price, 0);
-    }
-
-    return 0;
+    return statesValue?.reduce((acc, curr) => acc + curr.price, 0) || 0;
   });
 
   totalPriceFormatted = computed(() => {
-    const statesValue = this.subscriptionResource.value();
+    const value =
+      this.subscriptionResource
+        .value()
+        ?.reduce((acc, curr) => acc + curr.price, 0) || 0;
 
-    if (Array.isArray(statesValue)) {
-      const value = statesValue.reduce((acc, curr) => acc + curr.price, 0);
-
-      return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      }).format(value);
-    }
-
-    return 0;
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
   });
 
   mediaPrice = computed(() => {
     const statesValue = this.subscriptionResource.value();
 
-    if (Array.isArray(statesValue)) {
-      const value = statesValue.reduce((acc, curr) => acc + curr.price, 0);
+    const value = statesValue?.reduce((acc, curr) => acc + curr.price, 0) || 0;
 
-      return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      }).format(value / statesValue.length);
-    }
-
-    return 0;
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value / (statesValue?.length || 1));
   });
 
   createCharts(statesMap: any[]) {
     console.warn('statesMap', statesMap);
 
-    const data = statesMap.reduce((acc, curr) => {
-      const date = new Date(curr.startDate);
-      const month = date
-        .toLocaleString('pt-BR', { month: 'long' })
-        .replace(/^./, (char) => char.toUpperCase());
+    interface MonthlyData {
+      [month: string]: number;
+    }
 
-      if (!acc[month]) {
-        acc[month] = 0;
-      }
+    const data: MonthlyData = statesMap
+      .sort(
+        (a, b) =>
+          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+      )
+      .reduce((acc: MonthlyData, curr) => {
+        const date = new Date(curr.startDate);
+        const month = date
+          .toLocaleString('pt-BR', { month: 'long' })
+          .replace(/^./, (char) => char.toUpperCase());
 
-      acc[month] += curr.price;
+        if (!acc[month]) {
+          acc[month] = 0;
+        }
 
-      return acc;
-    }, {});
+        acc[month] += curr.price;
 
+        return acc;
+      }, {});
+
+    const valroes = Object.values(data).map((value) => {
+      return value.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      });
+    });
+
+    console.warn('valroes', valroes);
     this.lineChartData.labels = Object.keys(data);
     this.lineChartData.datasets[0].data = Object.values(data);
     this.lineChartData.datasets[0].backgroundColor = '#4bc0c0';
@@ -172,27 +163,27 @@ export class DashboardHomeComponent {
     this.subscriptionForm.reset();
   }
 
-  submit() {
+  async submit() {
     if (this.subscriptionForm.invalid) {
       this.subscriptionForm.markAllAsTouched();
       return;
     }
 
-    const newSubscription = this.subscriptionForm.value;
+    const newSubscription = {
+      name: this.subscriptionForm.value.name || '',
+      description: this.subscriptionForm.value.description || '',
+      price: parseFloat(this.subscriptionForm.value.price || '0'),
+      startDate: this.subscriptionForm.value.startDate || '',
+      category: this.subscriptionForm.value.category || '',
+      userId: undefined,
+    };
 
-    this.subscriptionService.createSubscription(newSubscription).subscribe({
-      next: (response) => {
-        this.subscriptionForm.reset();
+    await this.subscriptionService.createSubscription(newSubscription);
+    this.subscriptionResource.reload();
+    this.createCharts(this.subscriptionResource.value() || []);
+    this.subscriptionForm.reset();
 
-        this.subscriptionResource.update(() => {
-          return [...this.subscriptions(), response];
-        });
-      },
-      error: (error) => {
-        console.error('Error creating subscription:', error);
-      },
-    });
-    // Aqui você pode enviar para o service/backend futuramente
+    // enviar para o service/backend futuramente
     this.closeModal();
   }
 }

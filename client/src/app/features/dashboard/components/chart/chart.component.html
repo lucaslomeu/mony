@@ -1,0 +1,10 @@
+<div class="bg-white rounded-lg shadow-sm p-6">
+  <h3 class="text-sm font-medium text-gray-700 mb-4">{{ title() }}</h3>
+  <canvas
+    baseChart
+    [data]="data()"
+    [options]="chartOptions"
+    [type]="chartType()"
+    class="max-h-64"
+  ></canvas>
+</div>

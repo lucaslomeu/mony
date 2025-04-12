@@ -1,13 +1,12 @@
+<!-- header.component.html -->
 <header class="bg-white shadow-md p-4 w-full fixed top-0 left-0 z-10">
   <div class="flex justify-between items-center">
     <div class="flex items-center gap-2 text-xl font-bold text-blue-600">
-      🪙 <span class="font-semibold">Mony</span>
+      <span class="font-semibold">Mony</span>
     </div>
 
-    <button
-      class="md:hidden text-gray-600 focus:outline-none"
-      (click)="toggleMenu()"
-    >
+    <!-- MOBILE: menu hamburguer à direita -->
+    <button class="md:hidden text-gray-600 ml-auto" (click)="toggleMenu.emit()">
       <svg
         class="w-6 h-6"
         fill="none"
@@ -21,8 +20,9 @@
       </svg>
     </button>
 
-    <div class="flex items-center gap-4">
-      <span class="text-sm text-gray-600">Olá, Usuário</span>
+    <!-- DESKTOP: usuário e logout -->
+    <div class="hidden md:flex items-center gap-4">
+      <span class="text-sm text-gray-600">Olá, {{ user?.name }}</span>
       <button class="text-sm text-red-500 hover:underline" (click)="logout()">
         Sair
       </button>

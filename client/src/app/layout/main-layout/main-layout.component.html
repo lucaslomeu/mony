@@ -1,6 +1,9 @@
 <div class="flex h-screen bg-gray-100">
+  <!-- Sidebar desktop + mobile -->
   <app-sidebar
-    class="hidden md:block fixed top-0 left-0 h-full w-64 bg-gray-800 text-white shadow-md p-6"
+    [mobileOpen]="menuOpen"
+    (close)="toggleMenu()"
+    (logout)="logout()"
   ></app-sidebar>
 
   <div class="flex-1 flex flex-col">
