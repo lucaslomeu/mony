@@ -26,13 +26,15 @@ public class SubscriptionMapper {
     }
 
     public static SubscriptionDTO toDTO(Subscription subscription) {
+        Long userId = subscription.getUser() != null ? subscription.getUser().getId() : null;
+
         return new SubscriptionDTO(
                 subscription.getId(),
                 subscription.getName(),
                 subscription.getDescription(),
                 subscription.getPrice(),
                 subscription.getStartDate(),
-                subscription.getUser().getId());
+                userId);
     }
 
     public static List<SubscriptionDTO> toDTOList(List<Subscription> subscriptions) {

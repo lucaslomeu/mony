@@ -5,6 +5,10 @@ import com.lomeu.mony.model.Address;
 
 public class AddressMapper {
     public static Address toEntity(AddressDTO addressDTO) {
+        if (addressDTO == null) {
+            throw new IllegalArgumentException("AddressDTO cannot be null");
+        }
+
         Address address = new Address();
         address.setId(addressDTO.getId());
         address.setCep(addressDTO.getCep());
@@ -27,6 +31,6 @@ public class AddressMapper {
                 address.getNeighborhood(),
                 address.getCity(),
                 address.getState(),
-                address.getUser().getId());
+                address.getUser() != null ? address.getUser().getId() : null);
     }
 }

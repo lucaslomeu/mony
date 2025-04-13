@@ -6,6 +6,8 @@ import com.lomeu.mony.model.MonyUser;
 import com.lomeu.mony.repository.MonyUserRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.security.Principal;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,13 @@ public class MonyUserService {
     public MonyUserDTO findById(Long id) {
         MonyUser user = monyUserRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         return UserMapper.toDTO(user);
+    }
+
+    public MonyUserDTO getCurrentUser(Principal principal) {
+        MonyUser currentUser = monyUserRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        currentUser.setPassword(null);
+        return UserMapper.toDTO(currentUser);
     }
 
     public void update(Long id, MonyUserDTO monyUserDTO) {

@@ -13,9 +13,7 @@ public class UserMapper {
             throw new IllegalArgumentException("AddressDTO cannot be null");
         }
 
-        Address address = new Address(addressDTO.getId(), addressDTO.getCep(), addressDTO.getStreet(),
-                addressDTO.getNumber(), addressDTO.getComplement(), addressDTO.getNeighborhood(),
-                addressDTO.getCity(), addressDTO.getState(), null);
+        Address address = AddressMapper.toEntity(addressDTO);
 
         MonyUser user = new MonyUser(monyUserDTO.getId(), monyUserDTO.getName(), monyUserDTO.getEmail(),
                 monyUserDTO.getPassword(), address);
@@ -26,11 +24,11 @@ public class UserMapper {
     }
 
     public static MonyUserDTO toDTO(MonyUser user) {
-        Address address = user.getAddress();
+        AddressDTO addressDTO = null;
 
-        AddressDTO addressDTO = new AddressDTO(address.getId(), address.getCep(), address.getStreet(),
-                address.getNumber(), address.getComplement(), address.getNeighborhood(),
-                address.getCity(), address.getState(), null);
+        if (user.getAddress() != null) {
+            addressDTO = AddressMapper.toDTO(user.getAddress());
+        }
 
         return new MonyUserDTO(user.getId(), user.getName(), user.getEmail(), null, addressDTO);
     }

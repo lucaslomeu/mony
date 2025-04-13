@@ -3,6 +3,9 @@ package com.lomeu.mony.controller;
 import com.lomeu.mony.dto.MonyUserDTO;
 import com.lomeu.mony.service.MonyUserService;
 import lombok.RequiredArgsConstructor;
+
+import java.security.Principal;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +26,12 @@ public class MonyUserController {
     public ResponseEntity<MonyUserDTO> update(@PathVariable Long id, @RequestBody MonyUserDTO userDTO) {
         monyUserService.update(id, userDTO);
         return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<MonyUserDTO> getCurrentUser(Principal principal) {
+        MonyUserDTO currentUserDTO = monyUserService.getCurrentUser(principal);
+        return ResponseEntity.ok(currentUserDTO);
     }
 
     @GetMapping("/{id}")
