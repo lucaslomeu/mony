@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, resource } from '@angular/core';
+import { Component, computed, inject, OnInit, resource } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,6 +9,7 @@ import {
 import { SubscriptionService } from '../../../shared/subscription.service';
 import { ChartData } from 'chart.js';
 import { ChartComponent } from '../components/chart/chart.component';
+import { UserService } from '../../../shared/user.service';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -19,6 +20,7 @@ import { ChartComponent } from '../components/chart/chart.component';
 })
 export class DashboardHomeComponent {
   private subscriptionService = inject(SubscriptionService);
+  private userService = inject(UserService);
 
   subscriptionResource = resource({
     request: () => null,
@@ -32,7 +34,6 @@ export class DashboardHomeComponent {
 
     if (statesValue) {
       this.createCharts(statesValue);
-      console.warn('Updated subscriptions:', statesValue);
       return statesValue;
     }
 
@@ -106,9 +107,9 @@ export class DashboardHomeComponent {
     }).format(value / (statesValue?.length || 1));
   });
 
-  createCharts(statesMap: any[]) {
-    console.warn('statesMap', statesMap);
+  user$ = this.userService.currentUser$;
 
+  createCharts(statesMap: any[]) {
     interface MonthlyData {
       [month: string]: number;
     }
@@ -140,7 +141,6 @@ export class DashboardHomeComponent {
       });
     });
 
-    console.warn('valroes', valroes);
     this.lineChartData.labels = Object.keys(data);
     this.lineChartData.datasets[0].data = Object.values(data);
     this.lineChartData.datasets[0].backgroundColor = '#4bc0c0';

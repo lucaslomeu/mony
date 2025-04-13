@@ -1,15 +1,25 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../../shared/auth.service';
+import { UserService } from '../../shared/user.service';
+import { catchError, map, of, take } from 'rxjs';
 
-export const AuthGuardCanActive: CanActivateFn = (route, state) => {
+export const AuthGuardCanActive: CanActivateFn = () => {
   const router = inject(Router);
-  const isAuthenticated = inject(AuthService).isAuthenticated();
+  const userService = inject(UserService);
 
-  if (!isAuthenticated) {
-    router.navigate(['/auth/login']);
-    return false;
-  }
+  return userService.currentUser$.pipe(
+    take(1),
+    map((user) => {
+      if (!user) {
+        router.navigate(['/auth/login']);
+        return false;
+      }
 
-  return true;
+      return true;
+    }),
+    catchError(() => {
+      router.navigate(['/auth/login']);
+      return of(false);
+    })
+  );
 };

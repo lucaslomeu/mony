@@ -46,7 +46,6 @@ export class CepService {
         throw new Error('Network response was not ok');
       }
 
-      console.warn('cidades', response.body);
       return response.body;
     },
   });

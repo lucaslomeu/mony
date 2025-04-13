@@ -6,11 +6,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../../shared/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -35,7 +35,6 @@ export class LoginComponent {
     this.authService.login({ email, password }).subscribe({
       next: (response) => {
         this.router.navigate(['/dashboard']);
-        console.warn('Login response', response);
       },
       error: (err) => {
         console.error('Login failed', err);

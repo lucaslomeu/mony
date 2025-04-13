@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import {
-  FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AuthService } from '../../../shared/auth.service';
+import { UserService } from '../../../shared/user.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-account-profile',
@@ -15,12 +15,17 @@ import { AuthService } from '../../../shared/auth.service';
   styleUrl: './account-profile.component.scss',
 })
 export class AccountProfileComponent {
-  private authService = inject(AuthService);
+  private userService = inject(UserService);
+  user = toSignal(this.userService.currentUser$, { initialValue: null });
 
   editing = false;
+
   accountForm: FormGroup = new FormGroup({
-    name: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
+    name: new FormControl(this.user()?.name, Validators.required),
+    email: new FormControl(this.user()?.email, [
+      Validators.required,
+      Validators.email,
+    ]),
     address: new FormGroup({
       cep: new FormControl(''),
       street: new FormControl(''),
@@ -36,7 +41,7 @@ export class AccountProfileComponent {
     this.editing = !this.editing;
     if (this.editing) {
       this.accountForm.enable();
-      this.accountForm.get('email')?.disable(); // email permanece readonly
+      this.accountForm.get('email')?.disable();
     } else {
       this.accountForm.disable();
     }
@@ -51,9 +56,6 @@ export class AccountProfileComponent {
       const formValue = this.accountForm.value;
       console.log('Dados atualizados:', formValue);
       this.toggleEdit();
-
-      // aqui você faria a chamada real pro backend
-      // ex: this.userService.update(formValue).subscribe(...)
     }
   }
 }

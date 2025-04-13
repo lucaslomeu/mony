@@ -65,7 +65,6 @@ export class ChartComponent {
       };
     }
 
-    // Default (bar)
     return {
       responsive: true,
       plugins: {

@@ -67,12 +67,10 @@ export class RegisterComponent {
       password: this.registerForm.get('password')?.value,
       address: {
         ...this.registerForm.get('address')?.value,
-        state: stateKey, // Use the state key instead of the value
-        cep: this.registerForm.get('address.cep')?.value.replace('-', ''), // Remove hyphen
+        state: stateKey,
+        cep: this.registerForm.get('address.cep')?.value.replace('-', ''),
       },
     };
-
-    console.warn('User Data:', userData);
 
     this.registerService.register(userData).subscribe({
       next: () => {

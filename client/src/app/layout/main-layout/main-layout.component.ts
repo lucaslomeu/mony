@@ -16,7 +16,6 @@ export class MainLayoutComponent {
   menuOpen = false;
 
   toggleMenu() {
-    console.warn('toggleMenu() called', this.menuOpen); // Log para depuração
     this.menuOpen = !this.menuOpen;
   }
 

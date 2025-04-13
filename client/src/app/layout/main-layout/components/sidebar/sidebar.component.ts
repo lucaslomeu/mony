@@ -9,23 +9,22 @@ import { Component, EventEmitter, input, Output } from '@angular/core';
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
-  isMenuOpen = false; // Controla o estado do menu hambúrguer
+  isMenuOpen = false;
   mobileOpen = input<boolean>(false);
 
   @Output() close = new EventEmitter<void>();
   @Output() logoutEvent = new EventEmitter<void>();
 
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen; // Alterna o estado do menu
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   closeMenu() {
-    console.warn('closeMenu() called'); // Log para depuração
-    this.isMenuOpen = false; // Fecha o menu
-    this.close.emit(); // Emite o evento de fechamento
+    this.isMenuOpen = false;
+    this.close.emit();
   }
 
   logout() {
-    this.logoutEvent.emit(); // Emite o evento de logout
+    this.logoutEvent.emit();
   }
 }
