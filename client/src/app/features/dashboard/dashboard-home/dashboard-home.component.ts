@@ -6,10 +6,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { SubscriptionService } from '../../../shared/subscription.service';
+import { SubscriptionService } from '../../../shared/services/subscription.service';
 import { ChartData } from 'chart.js';
 import { ChartComponent } from '../components/chart/chart.component';
-import { UserService } from '../../../shared/user.service';
+import { UserService } from '../../../shared/services/user.service';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -114,6 +114,8 @@ export class DashboardHomeComponent {
       [month: string]: number;
     }
 
+    console.warn('sstatesMap', statesMap);
+
     const data: MonthlyData = statesMap
       .sort(
         (a, b) =>
@@ -134,16 +136,11 @@ export class DashboardHomeComponent {
         return acc;
       }, {});
 
-    const valroes = Object.values(data).map((value) => {
-      return value.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      });
-    });
-
     this.lineChartData.labels = Object.keys(data);
     this.lineChartData.datasets[0].data = Object.values(data);
     this.lineChartData.datasets[0].backgroundColor = '#4bc0c0';
+
+    console.warn('data', data);
 
     this.pieChartData.labels = Object.keys(data);
     this.pieChartData.datasets[0].data = Object.values(data);

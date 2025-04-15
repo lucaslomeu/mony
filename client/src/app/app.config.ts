@@ -11,7 +11,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { jwtInterceptor } from './shared/interceptor/jwt.interceptor';
 
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { UserService } from './shared/user.service';
+import { UserService } from './shared/services/user.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [

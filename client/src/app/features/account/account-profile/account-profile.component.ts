@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { UserService } from '../../../shared/user.service';
+import { UserService } from '../../../shared/services/user.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({

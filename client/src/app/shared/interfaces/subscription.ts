@@ -3,7 +3,7 @@ export interface Subscription {
   name: string;
   price: number;
   startDate: string;
-  category: string;
+  category: any;
   description: string;
   // isActive: boolean;
   userId?: number;

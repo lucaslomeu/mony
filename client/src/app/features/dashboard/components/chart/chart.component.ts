@@ -30,6 +30,8 @@ export class ChartComponent {
 
     if (tipo === 'pie') {
       return {
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             display: true,
@@ -47,6 +49,7 @@ export class ChartComponent {
     if (tipo === 'line') {
       return {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             display: true,
@@ -67,6 +70,7 @@ export class ChartComponent {
 
     return {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           display: true,

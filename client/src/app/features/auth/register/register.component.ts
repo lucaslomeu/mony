@@ -6,8 +6,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RegisterService } from '../../../shared/register.service';
-import { CepService } from '../../../shared/cep.service';
+import { RegisterService } from '../../../shared/services/register.service';
+import { CepService } from '../../../shared/services/cep.service';
 import { State } from '../../../shared/enums/state';
 
 @Component({

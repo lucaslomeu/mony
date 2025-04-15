@@ -99,7 +99,7 @@
       <span class="text-gray-800">{{ subscription.name }}</span>
       <span class="text-gray-500">Desc</span>
       <div class="flex flex-wrap gap-2">
-        @for (category of ['Comida', 'Bebida']; track category) {
+        @for (category of subscription.category ; track category) {
         <span
           class="bg-gray-100 text-gray-700 text-xs font-medium px-3 py-1 rounded-full border border-gray-200"
         >

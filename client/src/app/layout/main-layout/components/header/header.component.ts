@@ -6,9 +6,9 @@ import {
   Output,
   signal,
 } from '@angular/core';
-import { AuthService } from '../../../../shared/auth.service';
+import { AuthService } from '../../../../shared/services/auth.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { UserService } from '../../../../shared/user.service';
+import { UserService } from '../../../../shared/services/user.service';
 
 @Component({
   selector: 'app-header',
