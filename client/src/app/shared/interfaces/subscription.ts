@@ -1,9 +1,9 @@
 export interface Subscription {
-  id?: string;
+  id?: number;
   name: string;
   price: number;
   startDate: string;
-  category: any;
+  categoryName: any;
   description: string;
   // isActive: boolean;
   userId?: number;

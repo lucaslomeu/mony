@@ -14,18 +14,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
 
     public List<CategoryDTO> getAllCategories() {
         return categoryRepository.findAll()
                 .stream()
-                .map(categoryMapper::toDTO)
+                .map(CategoryMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
-        Category category = categoryMapper.toEntity(categoryDTO);
+        Category category = CategoryMapper.toEntity(categoryDTO);
         Category savedCategory = categoryRepository.save(category);
-        return categoryMapper.toDTO(savedCategory);
+        return CategoryMapper.toDTO(savedCategory);
     }
 }

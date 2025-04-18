@@ -19,9 +19,25 @@ export class SubscriptionService {
     );
   }
 
+  updateSubscription(subscription: Subscription): Promise<Subscription> {
+    console.warn('updateSubscription', subscription);
+    return firstValueFrom(
+      this.http.put<Subscription>(
+        `${this.API_URL}/${subscription.id}`,
+        subscription
+      )
+    );
+  }
+
   getSubscriptions(): Promise<Subscription[]> {
     return firstValueFrom(
       this.http.get<Subscription[]>(`${this.API_URL}/user/subscriptions`)
+    );
+  }
+
+  deleteSubscription(subscription: Subscription): Promise<void> {
+    return firstValueFrom(
+      this.http.delete<void>(`${this.API_URL}/${subscription.id}`)
     );
   }
 }

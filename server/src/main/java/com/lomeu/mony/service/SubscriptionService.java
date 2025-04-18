@@ -2,9 +2,11 @@ package com.lomeu.mony.service;
 
 import com.lomeu.mony.dto.SubscriptionDTO;
 import com.lomeu.mony.mapper.SubscriptionMapper;
+import com.lomeu.mony.model.Category;
 import com.lomeu.mony.model.MonyUser;
 import com.lomeu.mony.model.Subscription;
 import com.lomeu.mony.repository.SubscriptionRepository;
+import com.lomeu.mony.repository.CategoryRepository;
 import com.lomeu.mony.repository.MonyUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,29 @@ import java.util.List;
 public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final MonyUserRepository monyUserRepository;
+    private final CategoryRepository categoryRepository;
 
     public SubscriptionDTO save(SubscriptionDTO subscriptionDTO) {
+        MonyUser user = monyUserRepository.findById(subscriptionDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         Subscription subscription = SubscriptionMapper.toEntity(subscriptionDTO);
+
+        subscription.setUser(user);
+
+        if (subscriptionDTO.getCategoryName() != null && !subscriptionDTO.getCategoryName().isEmpty()) {
+            Category category = categoryRepository.findByNameAndUserId(
+                    subscriptionDTO.getCategoryName(), subscriptionDTO.getUserId())
+                    .orElseGet(() -> {
+                        Category newCategory = new Category();
+                        newCategory.setName(subscriptionDTO.getCategoryName());
+                        newCategory.setUser(user);
+                        return categoryRepository.save(newCategory);
+                    });
+
+            subscription.setCategory(category);
+        }
+
         subscriptionRepository.save(subscription);
         return SubscriptionMapper.toDTO(subscription);
     }

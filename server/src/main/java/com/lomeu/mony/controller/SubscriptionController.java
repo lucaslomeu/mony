@@ -31,7 +31,13 @@ public class SubscriptionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SubscriptionDTO> update(@PathVariable Long id, @RequestBody SubscriptionDTO subscriptionDTO) {
+    public ResponseEntity<SubscriptionDTO> update(@PathVariable Long id, @RequestBody SubscriptionDTO subscriptionDTO,
+            Principal principal) {
+        MonyUser user = monyUserRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        subscriptionDTO.setUserId(user.getId());
+
         subscriptionService.update(id, subscriptionDTO);
         return ResponseEntity.ok(subscriptionDTO);
     }
