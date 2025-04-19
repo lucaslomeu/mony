@@ -80,7 +80,7 @@
             <select formControlName="city" class="input-clean">
               <option value="" disabled selected>Selecione a cidade</option>
               @for (city of cities(); track city.id) {
-              <option [value]="city">
+              <option [value]="city.id">
                 {{ city.nome }}
               </option>
               }

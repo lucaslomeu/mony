@@ -72,15 +72,15 @@
             (change)="onStateChange()"
           >
             <option value="">Selecione o estado</option>
-            <!-- @for (state of states(); track state.id) {
+            @for (state of states(); track state.id) {
             <option [value]="state.id">{{ state.sigla }}</option>
-            } -->
+            }
           </select>
           <select formControlName="city" class="input-clean">
             <option value="">Selecione a cidade</option>
-            <!-- @for (city of cities(); track city.id) {
-            <option [value]="city">{{ city.nome }}</option>
-            } -->
+            @for (city of cities(); track city.id) {
+            <option [value]="city.id">{{ city.nome }}</option>
+            }
           </select>
         </div>
       </div>

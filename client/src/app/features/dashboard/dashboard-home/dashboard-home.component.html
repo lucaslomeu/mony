@@ -48,17 +48,21 @@
 
 <!-- CHARTS -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-  <app-chart
-    [title]="'Gastos Mensais'"
-    [chartType]="'bar'"
-    [data]="lineChartData"
-  ></app-chart>
+  <ng-container *ngIf="lineChartData.labels?.length">
+    <app-chart
+      [title]="'Gastos Mensais'"
+      [chartType]="'bar'"
+      [data]="lineChartData"
+    ></app-chart>
+  </ng-container>
 
-  <app-chart
-    [title]="'Categorias de Assinaturas'"
-    [chartType]="'pie'"
-    [data]="pieChartData"
-  ></app-chart>
+  <ng-container *ngIf="pieChartData.labels?.length">
+    <app-chart
+      [title]="'Categorias de Assinaturas'"
+      [chartType]="'pie'"
+      [data]="pieChartData"
+    ></app-chart>
+  </ng-container>
 </div>
 
 <!-- Lista de assinaturas -->
@@ -87,7 +91,10 @@
     </button>
   </div>
 
-  <ul class="divide-y divide-gray-200">
+  <ul
+    class="divide-y divide-gray-200"
+    *ngIf="subscriptions().length; else emptyList"
+  >
     <li class="grid grid-cols-5 gap-4 py-2 text-sm font-medium text-gray-600">
       <span>Nome</span>
       <span>Descrição</span>
@@ -97,35 +104,19 @@
     </li>
     @for (subscription of subscriptions(); track subscription.id) {
     <li class="grid grid-cols-5 gap-4 py-3 items-center text-sm">
-      <span class="text-gray-800">{{ subscription.name }}</span>
-      <span class="text-gray-500">Desc</span>
-      <div class="flex flex-wrap gap-2">
-        <span
-          class="bg-gray-100 text-gray-700 text-xs font-medium px-3 py-1 rounded-full border border-gray-200"
-        >
-          {{ subscription.categoryName || "Sem categoria" }}
-        </span>
-      </div>
-      <span class="text-gray-700 font-medium">{{
-        subscription.price | currency : "BRL"
-      }}</span>
-      <div class="flex justify-end gap-2">
-        <button
-          class="text-sm text-blue-600 hover:underline cursor-pointer"
-          (click)="editSubscription(subscription)"
-        >
-          Editar
-        </button>
-        <button
-          class="text-sm text-red-600 hover:underline cursor-pointer"
-          (click)="removeSubscription(subscription)"
-        >
-          Remover
-        </button>
-      </div>
+      <!-- ... conteúdo atual ... -->
     </li>
     }
   </ul>
+
+  <ng-template #emptyList>
+    <div class="text-center text-gray-500 py-10">
+      <p class="text-lg font-medium">
+        Você ainda não tem nenhuma assinatura cadastrada.
+      </p>
+      <p class="text-sm">Clique em "Adicionar" para criar a primeira.</p>
+    </div>
+  </ng-template>
 </div>
 
 <!-- Modal -->

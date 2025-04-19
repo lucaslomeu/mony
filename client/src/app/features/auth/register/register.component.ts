@@ -1,4 +1,4 @@
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Component, inject, input } from '@angular/core';
 import {
   FormControl,
@@ -19,6 +19,7 @@ import { State } from '../../../shared/enums/state';
 export class RegisterComponent {
   private registerService = inject(RegisterService);
   private cepService = inject(CepService);
+  private router = inject(Router);
 
   states = this.cepService.loadedStates;
   cities = this.cepService.loadedCities;
@@ -56,9 +57,8 @@ export class RegisterComponent {
       return;
     }
 
-    const selectedStateValue = this.registerForm.get('address.state')?.value;
-    const stateKey = Object.keys(State).find(
-      (key) => State[key as keyof typeof State] === selectedStateValue
+    const selectedStateValue = this.states().find(
+      (state) => state.id === this.cepService.stateSelected()
     );
 
     const userData = {
@@ -67,13 +67,16 @@ export class RegisterComponent {
       password: this.registerForm.get('password')?.value,
       address: {
         ...this.registerForm.get('address')?.value,
-        state: stateKey,
+        state: selectedStateValue?.id,
         cep: this.registerForm.get('address.cep')?.value.replace('-', ''),
+        city: this.registerForm.get('address')?.value.city,
       },
     };
 
     this.registerService.register(userData).subscribe({
       next: () => {
+        this.registerForm.reset();
+        this.router.navigate(['/auth/login']);
         console.log('User registered successfully!');
       },
       error: (err) => {
@@ -83,7 +86,7 @@ export class RegisterComponent {
   }
 
   onStateChange() {
-    const selectedState = this.registerForm.get('address.state')?.value;
-    this.cepService.setState(selectedState);
+    const selectedState = this.registerForm.get('address')?.value.state;
+    this.cepService.setState(Number(selectedState));
   }
 }

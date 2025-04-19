@@ -9,6 +9,15 @@ export interface AuthResponse {
   name: string;
   email: string;
   token: string;
+  address: {
+    cep: string;
+    street: string;
+    number: string;
+    complement?: string;
+    neighborhood: string;
+    city: any;
+    state: any;
+  };
 }
 
 @Injectable({

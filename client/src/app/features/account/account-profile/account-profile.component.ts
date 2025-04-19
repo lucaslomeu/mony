@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, input } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { UserService } from '../../../shared/services/user.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { CepService } from '../../../shared/services/cep.service';
 
 @Component({
   selector: 'app-account-profile',
@@ -16,7 +17,36 @@ import { toSignal } from '@angular/core/rxjs-interop';
 })
 export class AccountProfileComponent {
   private userService = inject(UserService);
+  private cepService = inject(CepService);
   user = toSignal(this.userService.currentUser$, { initialValue: null });
+
+  states = this.cepService.loadedStates;
+  cities = this.cepService.loadedCities;
+
+  constructor() {
+    effect(() => {
+      const user = this.user();
+      const states = this.states();
+
+      if (user && user.address?.state && states.length) {
+        this.cepService.setState(user.address.state);
+
+        const stateControl = this.accountForm.get('address.state');
+        const cityControl = this.accountForm.get('address.city');
+
+        if (!stateControl?.value) {
+          stateControl?.setValue(user.address.state);
+        }
+
+        if (!cityControl?.value) {
+          cityControl?.setValue(user.address.city);
+        }
+      }
+    });
+  }
+
+  stateSelected = input<string>('');
+  citySelected = input<string>('');
 
   editing = false;
 
@@ -27,13 +57,19 @@ export class AccountProfileComponent {
       Validators.email,
     ]),
     address: new FormGroup({
-      cep: new FormControl(''),
-      street: new FormControl(''),
-      number: new FormControl(''),
-      complement: new FormControl(''),
-      neighborhood: new FormControl(''),
-      city: new FormControl(''),
-      state: new FormControl(''),
+      cep: new FormControl(this.user()?.address.cep, [
+        Validators.required,
+        Validators.pattern(/^\d{5}-\d{3}$/),
+      ]),
+      street: new FormControl(this.user()?.address.street, Validators.required),
+      number: new FormControl(this.user()?.address.number, Validators.required),
+      complement: new FormControl(this.user()?.address.complement),
+      neighborhood: new FormControl(
+        this.user()?.address.neighborhood,
+        Validators.required
+      ),
+      city: new FormControl(this.user()?.address.city, Validators.required),
+      state: new FormControl(this.user()?.address.state, Validators.required),
     }),
   });
 
@@ -48,7 +84,8 @@ export class AccountProfileComponent {
   }
 
   onStateChange() {
-    // carregar cidades com base no estado
+    const selectedState = this.accountForm.get('address.state')?.value;
+    this.cepService.setState(selectedState);
   }
 
   save() {

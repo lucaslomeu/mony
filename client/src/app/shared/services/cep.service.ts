@@ -1,5 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, resource, signal } from '@angular/core';
+import {
+  computed,
+  effect,
+  inject,
+  Injectable,
+  resource,
+  signal,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({
@@ -14,7 +21,7 @@ export class CepService {
 
   protected http = inject(HttpClient);
 
-  stateSelected = signal<string>('');
+  stateSelected = signal<number>(0);
 
   states = resource({
     request: () => null,
@@ -74,7 +81,16 @@ export class CepService {
     return [];
   });
 
-  public setState(state: string) {
-    this.stateSelected.set(state);
+  constructor() {
+    effect(() => {
+      const states = this.loadedStates();
+      if (states.length && !this.stateSelected()) {
+        this.setState(states[0].id);
+      }
+    });
+  }
+
+  public setState(stateId: number) {
+    this.stateSelected.set(stateId);
   }
 }
