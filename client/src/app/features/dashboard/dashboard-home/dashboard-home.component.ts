@@ -3,6 +3,7 @@ import { Component, computed, inject, OnInit, resource } from '@angular/core';
 import {
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -15,7 +16,7 @@ import { Subscription } from '../../../shared/interfaces/subscription';
 @Component({
   selector: 'app-dashboard-home',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ChartComponent],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, ChartComponent],
   templateUrl: './dashboard-home.component.html',
   styleUrls: ['./dashboard-home.component.scss'],
 })
@@ -73,7 +74,7 @@ export class DashboardHomeComponent {
     description: new FormControl('', Validators.required),
     price: new FormControl('', [Validators.required, Validators.min(0.01)]),
     startDate: new FormControl('', Validators.required),
-    categoryName: new FormControl('', Validators.required),
+    category: new FormControl<string[]>([], Validators.required),
   });
 
   totalSubscriptions = computed(() => {
@@ -135,18 +136,26 @@ export class DashboardHomeComponent {
     },
   ];
 
-  // ngOnInit() {
-  //   this.categoryService.getAllByUser().subscribe((categories) => {
-  //     this.userCategories = categories;
-  //     this.filteredCategories = [];
-  //   });
+  newCategory: string = '';
+  selectedCategories: string[] = [];
 
-  //   this.subscriptionForm.get('categoryName')?.valueChanges.subscribe(value => {
-  //     this.filteredCategories = this.userCategories.filter(cat =>
-  //       cat.name.toLowerCase().includes(value?.toLowerCase() || '')
-  //     );
-  //   });
-  // }
+  addCategory() {
+    if (
+      this.newCategory.trim() &&
+      !this.selectedCategories.includes(this.newCategory.trim())
+    ) {
+      this.selectedCategories.push(this.newCategory.trim());
+      this.subscriptionForm.get('category')?.setValue(this.selectedCategories);
+    }
+    this.newCategory = '';
+  }
+
+  removeCategory(category: string) {
+    this.selectedCategories = this.selectedCategories.filter(
+      (cat) => cat !== category
+    );
+    this.subscriptionForm.get('category')?.setValue(this.selectedCategories);
+  }
 
   createCharts(statesMap: any[]) {
     interface MonthlyData {
@@ -214,16 +223,19 @@ export class DashboardHomeComponent {
     );
   }
 
-  selectCategory(name: string) {
-    this.subscriptionForm.patchValue({ categoryName: name });
-    // this.filteredCategories = [];
+  formatCurrency(event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+    value = (parseInt(value, 10) / 100).toFixed(2); // Convert to currency format
+    input.value = `R$ ${value.replace('.', ',')}`; // Format as "R$"
+    this.subscriptionForm.get('price')?.setValue(value); // Update form control
   }
 
   async submit() {
-    if (this.subscriptionForm.invalid) {
-      this.subscriptionForm.markAllAsTouched();
-      return;
-    }
+    // if (this.subscriptionForm.invalid) {
+    //   this.subscriptionForm.markAllAsTouched();
+    //   return;
+    // }
 
     const newSubscription = {
       id: this.subscriptionForm.value.id || null,
@@ -231,31 +243,26 @@ export class DashboardHomeComponent {
       description: this.subscriptionForm.value.description || '',
       price: parseFloat(this.subscriptionForm.value.price || '0'),
       startDate: this.subscriptionForm.value.startDate || '',
-      categoryName: this.subscriptionForm.value.categoryName || '',
+      categories:
+        this.subscriptionForm.value.category || this.selectedCategories,
       userId: undefined,
     };
 
-    if (newSubscription.id) {
-      await this.subscriptionService
-        .updateSubscription(newSubscription)
-        .then((res) => {
-          console.warn('res', res);
-          this.subscriptionResource.reload();
-          this.createCharts(this.subscriptionResource.value() || []);
+    console.warn('SUBMIT', newSubscription);
 
-          this.subscriptionForm.reset();
-        });
-      this.subscriptionResource.reload();
-    } else {
-      await this.subscriptionService.createSubscription(newSubscription);
-    }
+    // if (newSubscription.id) {
+    //   await this.subscriptionService
+    //     .updateSubscription(newSubscription)
+    //     .then(() => {
+    //       this.subscriptionResource.reload();
+    //       this.createCharts(this.subscriptionResource.value() || []);
+    //       this.subscriptionForm.reset();
+    //     });
+    // } else {
+    //   await this.subscriptionService.createSubscription(newSubscription);
+    // }
 
-    // this.subscriptionResource.reload();
-    // this.createCharts(this.subscriptionResource.value() || []);
-    // this.subscriptionForm.reset();
-
-    // // enviar para o service/backend futuramente
-    this.closeModal();
+    // this.closeModal();
   }
 
   editSubscription(subscription: Subscription) {
@@ -265,7 +272,7 @@ export class DashboardHomeComponent {
       description: subscription.description,
       price: subscription.price.toFixed(2),
       startDate: subscription.startDate,
-      categoryName: subscription.categoryName,
+      category: subscription.category,
     });
 
     this.showModal = true;

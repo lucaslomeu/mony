@@ -132,7 +132,7 @@
       ✕
     </button>
 
-    <h2 class="text-lg font-medium text-gray-800 mb-4">Nova Assinatura</h2>
+    <h2 class="text-lg font-medium text-gray-800 mb-4">Cadastrar Assinatura</h2>
 
     <form [formGroup]="subscriptionForm" (ngSubmit)="submit()">
       <input
@@ -148,31 +148,41 @@
       <div class="relative mb-3">
         <input
           type="text"
-          formControlName="categoryName"
-          (input)="onCategoryInput($event.target)"
-          placeholder="Categoria"
+          formControlName="category"
+          [(ngModel)]="newCategory"
+          placeholder="Adicionar Categoria"
           class="input-clean w-full"
-          autocomplete="off"
+          (keydown.enter)="addCategory()"
         />
-
-        <ul
-          *ngIf="filteredCategories.length"
-          class="absolute left-0 right-0 bg-white border border-gray-300 rounded shadow mt-1 z-10 max-h-40 overflow-y-auto"
+        <button
+          type="button"
+          class="absolute right-1.5 top-1.5 bg-blue-500 text-white px-2 py-1 rounded-md text-sm shadow-sm hover:bg-blue-400 transition-all duration-200"
+          (click)="addCategory()"
         >
-          <li
-            *ngFor="let category of filteredCategories"
-            (click)="selectCategory(category.name)"
-            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+          +
+        </button>
+        <div class="flex flex-wrap gap-2 mt-2">
+          <span
+            *ngFor="let category of selectedCategories"
+            class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full flex items-center gap-2"
           >
-            {{ category.name }}
-          </li>
-        </ul>
+            {{ category }}
+            <button
+              type="button"
+              class="text-red-500 hover:text-red-700"
+              (click)="removeCategory(category)"
+            >
+              ✕
+            </button>
+          </span>
+        </div>
       </div>
       <input
         formControlName="price"
-        type="number"
+        type="text"
         placeholder="Valor (R$)"
         class="input-clean mb-3 w-full"
+        (input)="formatCurrency($event)"
       />
       <input
         formControlName="startDate"

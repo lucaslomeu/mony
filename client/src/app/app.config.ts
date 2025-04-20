@@ -4,7 +4,7 @@ import {
   provideAppInitializer,
   provideZoneChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -12,6 +12,26 @@ import { jwtInterceptor } from './shared/interceptor/jwt.interceptor';
 
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { UserService } from './shared/services/user.service';
+import { AuthService } from './shared/services/auth.service';
+
+async function appInitializer() {
+  const userService = inject(UserService);
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  const isAuthenticated = authService.isAuthenticated();
+
+  if (isAuthenticated) {
+    await userService.loadUserOnAppStart();
+    router.navigate(['/dashboard']);
+  } else {
+    router.navigate(['/auth/login']);
+  }
+
+  return new Promise<void>((resolve) => {
+    resolve();
+  });
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,9 +39,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([jwtInterceptor])),
     provideCharts(withDefaultRegisterables()),
-    provideAppInitializer(() => {
-      const userService = inject(UserService);
-      return userService.loadUserOnAppStart();
-    }),
+    provideAppInitializer(appInitializer),
   ],
 };

@@ -23,9 +23,12 @@
     <!-- DESKTOP: usuário e logout -->
     <div class="hidden md:flex items-center gap-4">
       <span class="text-sm text-gray-600">Olá, {{ user()?.name }}</span>
-      <!-- <button class="text-sm text-red-500 hover:underline" (click)="logout()">
+      <button
+        class="text-sm text-red-500 hover:underline cursor-pointer"
+        (click)="logout()"
+      >
         Sair
-      </button> -->
+      </button>
     </div>
   </div>
 </header>
