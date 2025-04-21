@@ -1,21 +1,5 @@
 <section class="px-4 py-12 max-w-4xl mx-auto space-y-10">
   <form class="flex flex-col gap-3" [formGroup]="accountForm">
-    <!-- FOTO DE PERFIL -->
-    <div class="bg-white p-6 rounded-lg shadow-sm">
-      <h3 class="text-lg font-medium text-gray-700 mb-4">Foto de Perfil</h3>
-      <div class="flex items-center gap-6">
-        <img
-          [src]="'https://via.placeholder.com/96'"
-          alt="Avatar"
-          class="w-24 h-24 rounded-full object-cover border"
-        />
-        <div>
-          <input type="file" />
-          <p class="text-xs text-gray-500 mt-2">Formatos aceitos: JPG, PNG</p>
-        </div>
-      </div>
-    </div>
-
     <!-- DADOS PESSOAIS -->
     <div class="bg-white p-6 rounded-lg shadow-sm">
       <div class="flex justify-between items-center mb-4">

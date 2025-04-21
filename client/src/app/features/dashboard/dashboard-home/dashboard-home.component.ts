@@ -33,7 +33,6 @@ export class DashboardHomeComponent {
 
   subscriptions = computed(() => {
     const statesValue = this.subscriptionResource.value();
-    console.warn('statesValu1111e', statesValue);
     if (statesValue) {
       this.createCharts(statesValue);
       return statesValue;
@@ -164,8 +163,6 @@ export class DashboardHomeComponent {
       [month: string]: number;
     }
 
-    console.warn('sstatesMap', statesMap);
-
     const data: MonthlyData = statesMap
       .sort(
         (a, b) =>
@@ -198,8 +195,6 @@ export class DashboardHomeComponent {
     this.lineChartData.labels = Object.keys(data);
     this.lineChartData.datasets[0].data = Object.values(data);
     this.lineChartData.datasets[0].backgroundColor = '#4bc0c0';
-
-    console.warn('data', data);
 
     this.pieChartData.labels = Object.keys(categoriesData);
     this.pieChartData.datasets[0].data = Object.values(categoriesData);
@@ -251,8 +246,6 @@ export class DashboardHomeComponent {
       userId: undefined,
     };
 
-    console.warn('newSubscription', newSubscription);
-
     if (newSubscription.id) {
       await this.subscriptionService
         .updateSubscription(newSubscription)
@@ -269,7 +262,6 @@ export class DashboardHomeComponent {
   }
 
   editSubscription(subscription: Subscription) {
-    console.warn('subscription', subscription);
     this.subscriptionForm.patchValue({
       id: subscription.id,
       name: subscription.name,

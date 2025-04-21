@@ -34,11 +34,13 @@ export class LoginComponent {
 
     this.authService.login({ email, password }).subscribe({
       next: (response) => {
-        console.warn('Login successful', response);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         console.error('Login failed', err);
+      },
+      complete: () => {
+        console.log('Login request completed');
       },
     });
   }

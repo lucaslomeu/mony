@@ -20,7 +20,6 @@ export class SubscriptionService {
   }
 
   updateSubscription(subscription: Subscription): Promise<Subscription> {
-    console.warn('updateSubscription', subscription);
     return firstValueFrom(
       this.http.put<Subscription>(
         `${this.API_URL}/${subscription.id}`,

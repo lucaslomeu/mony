@@ -1,36 +1,71 @@
-<section class="py-12 px-4">
+<section class="w-full h-full flex flex-col items-center justify-center">
   <div
-    class="max-w-screen-xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between gap-8"
+    class="max-w-2xl px-6 flex flex-col items-center justify-center flex-grow"
   >
-    <div class="max-w-xl text-center md:text-left">
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-        Gerencie suas <span class="text-blue-600">finanças</span> com facilidade
-      </h1>
-      <p class="text-gray-600 mb-8">
-        Controle seus gastos, acompanhe metas e alcance a liberdade financeira
-        com o <strong>Mony</strong>.
-      </p>
+    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-4">
+      Gerencie suas <span class="text-blue-600">finanças</span> com facilidade
+    </h1>
+    <p class="text-lg text-gray-600 mb-2">
+      Controle seus gastos, acompanhe metas e alcance a liberdade financeira com
+      o <strong>Mony</strong>.
+    </p>
+    <p class="text-sm text-gray-500 italic mb-6">
+      Comece a transformar sua vida financeira hoje mesmo.
+    </p>
 
-      <div
-        class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
+    <div class="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+      <a
+        routerLink="/auth/register"
+        class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition"
       >
-        <a
-          routerLink="/auth/login"
-          class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
-        >
-          Entrar
-        </a>
-        <a
-          routerLink="/auth/register"
-          class="border border-blue-600 text-blue-600 px-6 py-3 rounded hover:bg-blue-50 transition"
-        >
-          Criar conta
-        </a>
+        Criar conta grátis
+      </a>
+      <a
+        routerLink="/auth/login"
+        class="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 transition"
+      >
+        Já tenho conta
+      </a>
+    </div>
+  </div>
+
+  <div
+    class="w-full max-w-5xl px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pb-6"
+  >
+    <div
+      class="flex items-start gap-3 bg-white border border-gray-200 rounded-lg p-4 shadow transition hover:shadow-md"
+    >
+      <span class="text-xl text-blue-600">👥</span>
+      <div class="text-left">
+        <h3 class="font-semibold text-gray-800 text-base">+2.000 usuários</h3>
+        <p class="text-sm text-gray-600">
+          Confiando no Mony para organizar suas finanças
+        </p>
       </div>
     </div>
 
-    <div class="w-full md:w-1/2 flex justify-center">
-      <img src="assets/home.svg" alt="Ilustração" class="w-full max-w-md" />
+    <div
+      class="flex items-start gap-3 bg-white border border-gray-200 rounded-lg p-4 shadow transition hover:shadow-md"
+    >
+      <span class="text-xl text-blue-600">🔒</span>
+      <div class="text-left">
+        <h3 class="font-semibold text-gray-800 text-base">100% seguro</h3>
+        <p class="text-sm text-gray-600">
+          Seus dados protegidos com criptografia de ponta
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="flex items-start gap-3 bg-white border border-gray-200 rounded-lg p-4 shadow transition hover:shadow-md"
+    >
+      <span class="text-xl text-blue-600">BR</span>
+      <div class="text-left">
+        <h3 class="font-semibold text-gray-800 text-base">Feito no Brasil</h3>
+        <p class="text-sm text-gray-600">
+          Pensado para a realidade financeira dos brasileiros
+        </p>
+      </div>
     </div>
   </div>
 </section>

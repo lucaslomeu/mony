@@ -25,7 +25,7 @@ async function appInitializer() {
     await userService.loadUserOnAppStart();
     router.navigate(['/dashboard']);
   } else {
-    router.navigate(['/auth/login']);
+    router.navigate(['/']);
   }
 
   return new Promise<void>((resolve) => {
