@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,5 +17,5 @@ public class SubscriptionDTO {
     private double price;
     private LocalDate startDate;
     private Long userId;
-    private String categoryName;
+    private List<String> categories;
 }

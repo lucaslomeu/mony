@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,17 +29,18 @@ public class SubscriptionService {
 
         subscription.setUser(user);
 
-        if (subscriptionDTO.getCategoryName() != null && !subscriptionDTO.getCategoryName().isEmpty()) {
-            Category category = categoryRepository.findByNameAndUserId(
-                    subscriptionDTO.getCategoryName(), subscriptionDTO.getUserId())
-                    .orElseGet(() -> {
-                        Category newCategory = new Category();
-                        newCategory.setName(subscriptionDTO.getCategoryName());
-                        newCategory.setUser(user);
-                        return categoryRepository.save(newCategory);
-                    });
+        if (subscriptionDTO.getCategories() != null) {
+            List<Category> categories = subscriptionDTO.getCategories().stream()
+                    .map(categoryName -> categoryRepository.findByNameAndUserId(categoryName, user.getId())
+                            .orElseGet(() -> {
+                                Category newCategory = new Category();
+                                newCategory.setName(categoryName);
+                                newCategory.setUser(user);
+                                return categoryRepository.save(newCategory);
+                            }))
+                    .collect(Collectors.toList());
 
-            subscription.setCategory(category);
+            subscription.setCategories(categories);
         }
 
         subscriptionRepository.save(subscription);
@@ -59,11 +61,30 @@ public class SubscriptionService {
     public void update(Long id, SubscriptionDTO subscriptionDTO) {
         Subscription subscription = subscriptionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Subscription not found"));
-        Subscription updated = SubscriptionMapper.toEntity(subscriptionDTO);
-        updated.setId(subscription.getId());
+
         MonyUser user = monyUserRepository.findById(subscriptionDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        updated.setUser(user);
+
+        subscription.setName(subscriptionDTO.getName());
+        subscription.setDescription(subscriptionDTO.getDescription());
+        subscription.setPrice(subscriptionDTO.getPrice());
+        subscription.setStartDate(subscriptionDTO.getStartDate());
+        subscription.setUser(user);
+
+        if (subscriptionDTO.getCategories() != null) {
+            List<Category> categories = subscriptionDTO.getCategories().stream()
+                    .map(name -> categoryRepository.findByNameAndUserId(name, user.getId())
+                            .orElseGet(() -> {
+                                Category category = new Category();
+                                category.setName(name);
+                                category.setUser(user);
+                                return categoryRepository.save(category);
+                            }))
+                    .collect(Collectors.toList());
+
+            subscription.setCategories(categories);
+        }
+
         subscriptionRepository.save(subscription);
     }
 

@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,7 +27,7 @@ public class Subscription {
     @JoinColumn(name = "user_id")
     private MonyUser user;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "subscription_categories", joinColumns = @JoinColumn(name = "subscription_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories;
 }

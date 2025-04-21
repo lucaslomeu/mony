@@ -1,9 +1,11 @@
 package com.lomeu.mony.mapper;
 
 import com.lomeu.mony.dto.SubscriptionDTO;
+import com.lomeu.mony.model.Category;
 import com.lomeu.mony.model.MonyUser;
 import com.lomeu.mony.model.Subscription;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,20 +18,15 @@ public class SubscriptionMapper {
         subscription.setPrice(subscriptionDTO.getPrice());
         subscription.setStartDate(subscriptionDTO.getStartDate());
 
-        if (subscriptionDTO.getUserId() != null) {
-            MonyUser user = new MonyUser();
-            user.setId(subscriptionDTO.getUserId());
-            subscription.setUser(user);
-        }
-
         return subscription;
     }
 
     public static SubscriptionDTO toDTO(Subscription subscription) {
-        String categoryName = null;
-        if (subscription.getCategory() != null) {
-            categoryName = subscription.getCategory().getName();
-        }
+        List<String> categoryNames = subscription.getCategories() != null
+                ? subscription.getCategories().stream()
+                        .map(Category::getName)
+                        .collect(Collectors.toList())
+                : new ArrayList<>();
 
         return new SubscriptionDTO(
                 subscription.getId(),
@@ -37,8 +34,8 @@ public class SubscriptionMapper {
                 subscription.getDescription(),
                 subscription.getPrice(),
                 subscription.getStartDate(),
-                subscription.getUser().getId(),
-                categoryName);
+                subscription.getUser() != null ? subscription.getUser().getId() : null,
+                categoryNames);
     }
 
     public static List<SubscriptionDTO> toDTOList(List<Subscription> subscriptions) {

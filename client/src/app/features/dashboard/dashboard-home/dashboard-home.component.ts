@@ -33,7 +33,7 @@ export class DashboardHomeComponent {
 
   subscriptions = computed(() => {
     const statesValue = this.subscriptionResource.value();
-
+    console.warn('statesValu1111e', statesValue);
     if (statesValue) {
       this.createCharts(statesValue);
       return statesValue;
@@ -74,7 +74,7 @@ export class DashboardHomeComponent {
     description: new FormControl('', Validators.required),
     price: new FormControl('', [Validators.required, Validators.min(0.01)]),
     startDate: new FormControl('', Validators.required),
-    category: new FormControl<string[]>([], Validators.required),
+    categories: new FormControl<string[]>([], Validators.required),
   });
 
   totalSubscriptions = computed(() => {
@@ -145,7 +145,9 @@ export class DashboardHomeComponent {
       !this.selectedCategories.includes(this.newCategory.trim())
     ) {
       this.selectedCategories.push(this.newCategory.trim());
-      this.subscriptionForm.get('category')?.setValue(this.selectedCategories);
+      this.subscriptionForm
+        .get('categories')
+        ?.setValue(this.selectedCategories);
     }
     this.newCategory = '';
   }
@@ -154,7 +156,7 @@ export class DashboardHomeComponent {
     this.selectedCategories = this.selectedCategories.filter(
       (cat) => cat !== category
     );
-    this.subscriptionForm.get('category')?.setValue(this.selectedCategories);
+    this.subscriptionForm.get('categories')?.setValue(this.selectedCategories);
   }
 
   createCharts(statesMap: any[]) {
@@ -233,6 +235,7 @@ export class DashboardHomeComponent {
 
   async submit() {
     // if (this.subscriptionForm.invalid) {
+    //   console.warn('Formulário inválido');
     //   this.subscriptionForm.markAllAsTouched();
     //   return;
     // }
@@ -244,36 +247,39 @@ export class DashboardHomeComponent {
       price: parseFloat(this.subscriptionForm.value.price || '0'),
       startDate: this.subscriptionForm.value.startDate || '',
       categories:
-        this.subscriptionForm.value.category || this.selectedCategories,
+        this.subscriptionForm.value.categories || this.selectedCategories,
       userId: undefined,
     };
 
-    console.warn('SUBMIT', newSubscription);
+    console.warn('newSubscription', newSubscription);
 
-    // if (newSubscription.id) {
-    //   await this.subscriptionService
-    //     .updateSubscription(newSubscription)
-    //     .then(() => {
-    //       this.subscriptionResource.reload();
-    //       this.createCharts(this.subscriptionResource.value() || []);
-    //       this.subscriptionForm.reset();
-    //     });
-    // } else {
-    //   await this.subscriptionService.createSubscription(newSubscription);
-    // }
+    if (newSubscription.id) {
+      await this.subscriptionService
+        .updateSubscription(newSubscription)
+        .then(() => {
+          this.subscriptionResource.reload();
+          this.createCharts(this.subscriptionResource.value() || []);
+          this.subscriptionForm.reset();
+        });
+    } else {
+      await this.subscriptionService.createSubscription(newSubscription);
+    }
 
-    // this.closeModal();
+    this.closeModal();
   }
 
   editSubscription(subscription: Subscription) {
+    console.warn('subscription', subscription);
     this.subscriptionForm.patchValue({
       id: subscription.id,
       name: subscription.name,
       description: subscription.description,
       price: subscription.price.toFixed(2),
       startDate: subscription.startDate,
-      category: subscription.category,
+      categories: subscription.categories,
     });
+
+    this.selectedCategories = subscription.categories;
 
     this.showModal = true;
   }
