@@ -1,6 +1,6 @@
 import { firstValueFrom } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environments/enviroment.prod';
+import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subscription } from '../interfaces/subscription';

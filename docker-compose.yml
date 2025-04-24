@@ -30,19 +30,19 @@ services:
       - "8080:8080"
     restart: always
 
-  frontend:
-    build:
-      context: ./client
-      dockerfile: Dockerfile.dev
-    container_name: mony_frontend
-    depends_on:
-      - backend
-    ports:
-      - "4200:4200"
-    volumes:
-      - ./client:/app
-      - /app/node_modules
-    restart: always
+  # frontend:
+  #   build:
+  #     context: ./client
+  #     dockerfile: Dockerfile.dev
+  #   container_name: mony_frontend
+  #   depends_on:
+  #     - backend
+  #   ports:
+  #     - "4200:4200"
+  #   volumes:
+  #     - ./client:/app
+  #     - /app/node_modules
+  #   restart: always
 
 volumes:
   db_data: {}

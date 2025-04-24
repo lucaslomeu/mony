@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.example.com',
+  apiUrl: 'https://mony-w4sl.onrender.com/api/v1',
 };
