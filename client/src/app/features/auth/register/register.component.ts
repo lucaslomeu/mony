@@ -5,10 +5,10 @@ import {
   FormGroup,
   ReactiveFormsModule,
   Validators,
+  AbstractControl,
 } from '@angular/forms';
 import { RegisterService } from '../../../shared/services/register.service';
 import { CepService } from '../../../shared/services/cep.service';
-import { State } from '../../../shared/enums/state';
 
 @Component({
   selector: 'app-register',
@@ -27,22 +27,28 @@ export class RegisterComponent {
   stateSelected = input<string>('');
   citySelected = input<string>('');
 
-  registerForm: FormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    confirmEmail: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required]),
-    confirmPassword: new FormControl('', [Validators.required]),
-    address: new FormGroup({
-      state: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      cep: new FormControl('', [Validators.required]),
-      street: new FormControl('', [Validators.required]),
-      number: new FormControl('', [Validators.required]),
-      complement: new FormControl(''),
-      neighborhood: new FormControl('', [Validators.required]),
-    }),
-  });
+  registerForm: FormGroup = new FormGroup(
+    {
+      name: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      confirmEmail: new FormControl('', [
+        Validators.required,
+        Validators.email,
+      ]),
+      password: new FormControl('', [Validators.required]),
+      confirmPassword: new FormControl('', [Validators.required]),
+      address: new FormGroup({
+        state: new FormControl('', [Validators.required]),
+        city: new FormControl('', [Validators.required]),
+        cep: new FormControl('', [Validators.required, this.cepValidator]),
+        street: new FormControl('', [Validators.required]),
+        number: new FormControl('', [Validators.required]),
+        complement: new FormControl(''),
+        neighborhood: new FormControl('', [Validators.required]),
+      }),
+    },
+    { validators: this.emailMatchValidator }
+  );
 
   register() {
     if (this.registerForm.invalid) {
@@ -88,5 +94,23 @@ export class RegisterComponent {
   onStateChange() {
     const selectedState = this.registerForm.get('address')?.value.state;
     this.cepService.setState(Number(selectedState));
+  }
+
+  formatCep(ev: any): string {
+    const value = ev.target.value.replace(/\D/g, '');
+    return value.length > 5
+      ? value.substring(0, 5) + '-' + value.substring(5, 8)
+      : value;
+  }
+
+  private cepValidator(control: AbstractControl) {
+    const cepPattern = /^\d{5}-\d{3}$/;
+    return cepPattern.test(control.value) ? null : { invalidCep: true };
+  }
+
+  private emailMatchValidator(group: AbstractControl) {
+    const email = group.get('email')?.value;
+    const confirmEmail = group.get('confirmEmail')?.value;
+    return email === confirmEmail ? null : { emailMismatch: true };
   }
 }

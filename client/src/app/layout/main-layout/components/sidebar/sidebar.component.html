@@ -1,6 +1,5 @@
 <!-- Desktop Sidebar -->
 <aside
-  *ngIf="mobileOpen"
   class="hidden md:block fixed top-0 left-0 w-64 bg-white text-black shadow-md p-6 h-full"
 >
   <div class="text-2xl font-semibold mb-8 text-center text-yellow-400">
@@ -9,9 +8,6 @@
 
   <nav class="space-y-6">
     <a routerLink="/dashboard" class="sidebar-link">Dashboard</a>
-    <!-- <a routerLink="/despesas" class="sidebar-link">Despesas</a>
-    <a routerLink="/relatorios" class="sidebar-link">Relatórios</a> -->
-    <!-- <a routerLink="/configuracoes" class="sidebar-link">Configurações</a> -->
     <a routerLink="/account" class="sidebar-link">Perfil</a>
   </nav>
 </aside>
@@ -19,11 +15,13 @@
 <!-- Mobile Fullscreen Sidebar -->
 <div
   *ngIf="mobileOpen"
-  class="fixed inset-0 z-50 bg-white flex flex-col justify-between animate-slide-in md:hidden"
+  class="fixed inset-0 z-50 bg-white flex flex-col justify-between md:hidden transition-transform duration-300"
+  [class.translate-x-0]="mobileOpen()"
+  [class.-translate-x-full]="!mobileOpen"
 >
-  <div class="flex justify-between items-center p-6 border-b">
-    <div class="text-xl font-bold text-blue-600 flex items-center gap-2">
-      <span>Mony</span>
+  <div class="flex justify-between shadow-md items-center p-4 px-8">
+    <div class="flex items-center gap-2 text-xl font-bold text-blue-600">
+      <span class="font-semibold">Mony</span>
     </div>
     <button class="text-gray-500 text-2xl" (click)="closeMenu()">✕</button>
   </div>
@@ -31,19 +29,9 @@
   <div
     class="flex-1 flex flex-col items-center justify-center gap-6 text-lg text-gray-700"
   >
-    <p class="text-gray-600">Olá,teste</p>
-
+    <span class="text-sm text-gray-600">Olá, {{ user()?.name }}</span>
     <a routerLink="/dashboard" (click)="closeMenu()" class="hover:underline"
       >Dashboard</a
-    >
-    <a routerLink="/despesas" (click)="closeMenu()" class="hover:underline"
-      >Despesas</a
-    >
-    <a routerLink="/relatorios" (click)="closeMenu()" class="hover:underline"
-      >Relatórios</a
-    >
-    <a routerLink="/configuracoes" (click)="closeMenu()" class="hover:underline"
-      >Configurações</a
     >
     <a routerLink="/account" (click)="closeMenu()" class="hover:underline"
       >Perfil</a

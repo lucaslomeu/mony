@@ -26,18 +26,29 @@
           formControlName="password"
           class="input-clean"
           placeholder="Senha"
+          type="password"
         />
         <input
           formControlName="confirmPassword"
           class="input-clean"
           placeholder="Confirmar Senha"
+          type="password"
         />
       </div>
 
       <div class="space-y-2">
         <p class="text-xs text-gray-500 uppercase tracking-wide">Endereço</p>
         <div formGroupName="address" class="grid grid-cols-1 gap-4">
-          <input formControlName="cep" placeholder="CEP" class="input-clean" />
+          <input
+            formControlName="cep"
+            placeholder="CEP"
+            class="input-clean"
+            (input)="
+              registerForm
+                .get('address.cep')
+                ?.setValue(formatCep($event), { emitEvent: false })
+            "
+          />
           <input
             formControlName="street"
             placeholder="Rua"
