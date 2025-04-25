@@ -1,6 +1,11 @@
 <div class="flex h-screen bg-gray-100">
-  <!-- Sidebar desktop + mobile -->
+  <!-- Sidebar desktop -->
+  <app-sidebar class="hidden md:block" (logout)="logout()"></app-sidebar>
+
+  <!-- Sidebar mobile -->
   <app-sidebar
+    *ngIf="menuOpen"
+    class="md:hidden"
     [mobileOpen]="menuOpen"
     (close)="toggleMenu()"
     (logout)="logout()"

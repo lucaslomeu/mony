@@ -5,8 +5,11 @@
       <span class="font-semibold">Mony</span>
     </div>
 
-    <!-- MOBILE: menu hamburguer à direita -->
-    <button class="md:hidden text-gray-600 ml-auto" (click)="toggleMenu.emit()">
+    <!-- MOBILE -->
+    <button
+      class="md:hidden text-gray-600 ml-auto hover:text-gray-800 transition-colors duration-200"
+      (click)="toggleMenu.emit()"
+    >
       <svg
         class="w-6 h-6"
         fill="none"
@@ -20,7 +23,7 @@
       </svg>
     </button>
 
-    <!-- DESKTOP: usuário e logout -->
+    <!-- DESKTOP -->
     <div class="hidden md:flex items-center gap-4">
       <span class="text-sm text-gray-600">Olá, {{ user()?.name }}</span>
       <button
