@@ -33,6 +33,13 @@
         />
       </div>
 
+      <!-- Mensagem de erro -->
+      @if (loginError) {
+      <div class="text-red-500 text-sm text-center mb-2">
+        E-mail ou senha inválidos.
+      </div>
+      }
+
       <!-- Botão -->
       <button
         type="submit"
