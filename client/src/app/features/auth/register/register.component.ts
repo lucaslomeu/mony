@@ -47,7 +47,12 @@ export class RegisterComponent {
         neighborhood: new FormControl('', [Validators.required]),
       }),
     },
-    { validators: this.emailMatchValidator }
+    {
+      validators: [
+        RegisterComponent.matchEmails,
+        RegisterComponent.matchPasswords,
+      ],
+    }
   );
 
   register() {
@@ -108,9 +113,21 @@ export class RegisterComponent {
     return cepPattern.test(control.value) ? null : { invalidCep: true };
   }
 
-  private emailMatchValidator(group: AbstractControl) {
+  static matchEmails(group: AbstractControl) {
     const email = group.get('email')?.value;
     const confirmEmail = group.get('confirmEmail')?.value;
-    return email === confirmEmail ? null : { emailMismatch: true };
+    if (email && confirmEmail && email !== confirmEmail) {
+      return { emailMismatch: true };
+    }
+    return null;
+  }
+
+  static matchPasswords(group: AbstractControl) {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    if (password && confirmPassword && password !== confirmPassword) {
+      return { passwordMismatch: true };
+    }
+    return null;
   }
 }

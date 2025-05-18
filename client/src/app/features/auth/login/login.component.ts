@@ -23,6 +23,8 @@ export class LoginComponent {
     password: new FormControl('', [Validators.required]),
   });
 
+  loginError = false;
+
   login() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -34,9 +36,11 @@ export class LoginComponent {
 
     this.authService.login({ email, password }).subscribe({
       next: (res) => {
+        this.loginError = false;
         this.router.navigateByUrl('/dashboard');
       },
       error: (err) => {
+        this.loginError = true;
         console.error('Login failed', err);
       },
       complete: () => {

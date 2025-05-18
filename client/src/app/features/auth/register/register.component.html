@@ -19,6 +19,19 @@
           class="input-clean"
           placeholder="Confirmar Email"
         />
+        @if (registerForm.errors?.['emailMismatch'] &&
+        (registerForm.get('confirmEmail')?.touched ||
+        registerForm.get('email')?.touched)) {
+        <div class="text-red-500 text-xs">Os emails não coincidem.</div>
+        } @if (registerForm.get('email')?.hasError('required') &&
+        registerForm.get('email')?.touched) {
+        <div class="text-red-500 text-xs">Email é obrigatório.</div>
+        } @if (registerForm.get('confirmEmail')?.hasError('required') &&
+        registerForm.get('confirmEmail')?.touched) {
+        <div class="text-red-500 text-xs">
+          Confirmação de email é obrigatória.
+        </div>
+        }
       </div>
 
       <div class="grid grid-cols-1 gap-4">
@@ -34,6 +47,19 @@
           placeholder="Confirmar Senha"
           type="password"
         />
+        @if (registerForm.errors?.['passwordMismatch'] &&
+        (registerForm.get('confirmPassword')?.touched ||
+        registerForm.get('password')?.touched)) {
+        <div class="text-red-500 text-xs">As senhas não coincidem.</div>
+        } @if (registerForm.get('password')?.hasError('required') &&
+        registerForm.get('password')?.touched) {
+        <div class="text-red-500 text-xs">Senha é obrigatória.</div>
+        } @if (registerForm.get('confirmPassword')?.hasError('required') &&
+        registerForm.get('confirmPassword')?.touched) {
+        <div class="text-red-500 text-xs">
+          Confirmação de senha é obrigatória.
+        </div>
+        }
       </div>
 
       <div class="space-y-2">
@@ -103,6 +129,7 @@
       <button
         type="submit"
         class="w-full bg-gray-900 text-white py-2.5 rounded-md hover:bg-gray-800 transition"
+        [disabled]="registerForm.invalid"
       >
         Criar conta
       </button>
